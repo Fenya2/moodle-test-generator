@@ -1,0 +1,14 @@
+/* Заголовки */
+.header-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Иконка вопроса */
+.tooltip-label {
+    -fx-background-color: #ddd;
+    -fx-background-radius: 50%;
+    -fx-font-weight: bold;
+    -fx-padding: 2 6;
+    -fx-cursor: hand;
+}

@@ -14,11 +14,6 @@ public final class TerminalParameter extends Parameter
     }
 
     /**
-     * Имя параметра
-     */
-    private String name;
-
-    /**
      * Минимальное значение параметра
      */
     private BigDecimal minValue;
@@ -61,11 +56,5 @@ public final class TerminalParameter extends Parameter
     public void setStep(BigDecimal step)
     {
         this.step = step;
-    }
-
-    @Override
-    public String getName()
-    {
-        return name;
     }
 }

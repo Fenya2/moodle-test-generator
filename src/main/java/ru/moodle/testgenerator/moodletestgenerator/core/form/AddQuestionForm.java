@@ -1,6 +1,7 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.form;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
@@ -16,53 +17,35 @@ public class AddQuestionForm
     /**
      * Поле вопроса
      */
-    private String question;
+    private final String question;
     /**
      * Параметры на форме.
-     * @apiNote нуметруются с 0
      */
     private final List<Parameter> parameters;
     /**
      * Поле ответа
      */
-    private String answer;
+    private final String answer;
 
-    public AddQuestionForm()
+    public AddQuestionForm(String question, List<Parameter> parameters, String answer)
     {
-        this.parameters = new ArrayList<>();
+        this.question = question;
+        this.parameters = new ArrayList<>(parameters);
+        this.answer = answer;
     }
 
-    /**
-     * Добавляет место для параметра на форму в конец списка
-     */
-    public void addParameterPlace()
+    public String getQuestion()
     {
-        parameters.add(null);
+        return question;
     }
 
-    /**
-     * @param parameterIndex номер параметра на форме
-     * @return параметр под номером {@code intdex} на форме
-     */
-    public Parameter getParameterAt(int parameterIndex)
+    public List<Parameter> getParameters()
     {
-        return parameters.get(parameterIndex);
+        return Collections.unmodifiableList(parameters);
     }
 
-    /**
-     * Обновляет параметр под номером
-     */
-    public void updateParameterAt(int parameterIndex, Parameter parameter)
+    public String getAnswer()
     {
-        parameters.set(parameterIndex, parameter);
-    }
-
-    /**
-     * Удаляет парметр
-     * @param parameterIndex
-     */
-    public void deleteParameterAt(int parameterIndex)
-    {
-
+        return answer;
     }
 }

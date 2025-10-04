@@ -12,15 +12,31 @@ import ru.moodle.testgenerator.moodletestgenerator.ParameterContainerView;
  * @author dsyromyatnikov
  * @since 29.09.2025
  */
-public final class ParameterRemovedEvent extends AbstractParameterEvent
+public final class ParameterRemovedEvent extends Event
 {
     @Serial
     private static final long serialVersionUID = -2911629523495045944L;
 
-    public static final EventType<ParameterRemovedEvent> REMOVE_PARAMETER = new EventType<>(Event.ANY, "REMOVE PARAM");
+    public static final EventType<ParameterRemovedEvent> REMOVE_PARAMETER = new EventType<>(Event.ANY, "REMOVE_PARAM");
 
-    public ParameterRemovedEvent(ParameterContainerView parameter)
+    private final ParameterContainerView containerView;
+
+    public ParameterRemovedEvent(ParameterContainerView parameterContainerView)
     {
-        super(REMOVE_PARAMETER, parameter);
+        this(REMOVE_PARAMETER, parameterContainerView);
+    }
+
+    private ParameterRemovedEvent(EventType<? extends Event> eventType, ParameterContainerView containerView)
+    {
+        this.containerView = containerView;
+        super(eventType);
+    }
+
+    /**
+     * @return удаляемый параметр
+     */
+    public ParameterContainerView getParameter()
+    {
+        return containerView;
     }
 }

@@ -1,6 +1,5 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.parameters;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +17,11 @@ public final class DependentParameter extends Parameter
      */
     private final Set<String> dependentParameterNames;
 
+    /**
+     * Скрипт, вычисляющий значение параметра
+     */
+    private String evaluationScript;
+
     public DependentParameter(String name)
     {
         super(name);
@@ -27,25 +31,30 @@ public final class DependentParameter extends Parameter
     /**
      * Добавляет параметры с перечисленными именами в зависимые параметры
      */
-    public void addDependentParameters(String... parameterNames)
+    public void setDependentParameters(Set<String> parameterNames)
     {
-        dependentParameterNames.addAll(Arrays.asList(parameterNames));
-    }
-
-    /**
-     * Удаляет параметры с перечисленными именами из зависимых для текущего
-     */
-    public void removeDependentParameters(String... parameterNames)
-    {
-        Arrays.asList(parameterNames).forEach(dependentParameterNames::remove);
+        dependentParameterNames.addAll(parameterNames);
     }
 
     /**
      * @return имена зависимых параметров
      * @implNote возвращается неизменяемая коллекция
      */
-    public Set<String> getDependentParameters()
+    public Set<String> getDependentParameterNames()
     {
         return Collections.unmodifiableSet(dependentParameterNames);
+    }
+
+    /**
+     * @return скрипт, вычисляющий параметр
+     */
+    public String getEvaluationScript()
+    {
+        return evaluationScript;
+    }
+
+    public void setEvaluationScript(String evaluationScript)
+    {
+        this.evaluationScript = evaluationScript;
     }
 }

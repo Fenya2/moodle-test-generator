@@ -1,13 +1,19 @@
 package ru.moodle.testgenerator.moodletestgenerator;
 
+import java.util.List;
+
+import jakarta.annotation.Nullable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType;
+import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.AbstractParameterView;
+import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.DependentParameterView;
 import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.ParameterRemovedEvent;
+import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.TerminalParameterView;
 
 /**
  * Описание представления параметра, общее для всех видов параметров
@@ -18,21 +24,17 @@ import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.Param
 public class ParameterContainerView extends VBox
 {
     private static final int PARAMETER_SPACING = 5;
-    private final TextField nameField;
     private final ComboBox<ParameterType> parameterTypes;
+    /**
+     * Контейнер, куда помещается значение параметра
+     */
+    private final VBox parameterPlace;
 
     public ParameterContainerView()
     {
         super(PARAMETER_SPACING);
-
-        HBox firstRow = new HBox(PARAMETER_SPACING);
-        Label nameLabel = new Label("Имя параметра");
-        nameField = new TextField();
-        nameField.setPromptText("param1");
         Button removeButton = new Button("–");
         removeButton.setOnAction(_ -> this.fireEvent(new ParameterRemovedEvent(this)));
-
-        firstRow.getChildren().addAll(nameLabel, nameField, removeButton);
 
         HBox secondRow = new HBox(PARAMETER_SPACING);
         Label typeLabel = new Label("Тип параметра");
@@ -46,22 +48,8 @@ public class ParameterContainerView extends VBox
 
         secondRow.getChildren().addAll(typeLabel, parameterTypes);
 
-        this.getChildren().addAll(firstRow, secondRow);
-    }
-
-    public String getName()
-    {
-        return nameField.getText();
-    }
-
-    public ParameterType getSelectedType()
-    {
-        return parameterTypes.getValue();
-    }
-
-    public void setSelectedType(ParameterType type)
-    {
-        parameterTypes.setValue(type);
+        this.parameterPlace = new VBox();
+        this.getChildren().addAll(removeButton, secondRow, parameterPlace);
     }
 
     /**
@@ -71,10 +59,26 @@ public class ParameterContainerView extends VBox
      */
     private void onParameterTypeSelected(ParameterType selectedType)
     {
+        List<Node> place = parameterPlace.getChildren();
+        if (!place.isEmpty())
+        {
+            place.clear();
+        }
         switch (selectedType)
         {
-            case TERMINAL -> System.out.println("terminal");
-            case DEPENDENT -> System.out.println("dependent");
+            case TERMINAL -> place.add(new TerminalParameterView());
+            case DEPENDENT -> place.add(new DependentParameterView());
         }
+    }
+
+    /**
+     * @return заполненный параметр. {@code null}, если параметр не заполнялся
+     */
+    @Nullable
+    public AbstractParameterView getFilledParameter()
+    {
+        return parameterPlace.getChildren().isEmpty()
+                ? null
+                : (AbstractParameterView)parameterPlace.getChildren().getFirst();
     }
 }

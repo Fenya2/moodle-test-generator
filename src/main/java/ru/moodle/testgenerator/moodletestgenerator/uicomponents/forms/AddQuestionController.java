@@ -6,11 +6,12 @@ import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.ParameterContainerView;
+import ru.moodle.testgenerator.moodletestgenerator.core.QuestionGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
@@ -21,6 +22,9 @@ import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.Termi
 
 public class AddQuestionController
 {
+    @FXML
+    public Label errorLabel;
+
     @FXML
     private TextArea questionField;
 
@@ -78,9 +82,18 @@ public class AddQuestionController
                     case TerminalParameterView terminalParamView ->
                     {
                         TerminalParameter terminalParam = new TerminalParameter(terminalParamView.getName());
-                        terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
-                        terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
-                        terminalParam.setMaxValue(new BigDecimal(terminalParamView.getStep()));
+                        try
+                        {
+                            terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
+                            terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
+                            terminalParam.setMaxValue(new BigDecimal(terminalParamView.getStep()));
+                        }
+                        catch (NumberFormatException _)
+                        {
+                            errorLabel.setText("Неверно заданы допустимые значения параметра %s".formatted(
+                                    terminalParam.getName()));
+                            errorLabel.setVisible(true);
+                        }
                         yield terminalParam;
                     }
                     case DependentParameterView dependentParamView ->
@@ -93,6 +106,15 @@ public class AddQuestionController
                 }).toList();
         String answer = answerField.getText();
         AddQuestionForm form = new AddQuestionForm(question, parameters, answer);
+        try
+        {
+            new QuestionGenerator(form);
+        }
+        catch (Exception e)
+        {
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+        }
     }
 
     private List<Node> getParameterViews()

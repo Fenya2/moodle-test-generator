@@ -55,6 +55,10 @@
 		<Label text="Поле ответа" styleClass="header-label"/>
 		<TextField fx:id="answerField" promptText="Введите ответ"/>
 
+		<Label fx:id="errorLabel"
+			   wrapText="true"
+			   style="-fx-text-fill: black; -fx-background-color: red; -fx-padding: 10;"
+			   visible="false"/>
 		<Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
 	</VBox>
 </ScrollPane>

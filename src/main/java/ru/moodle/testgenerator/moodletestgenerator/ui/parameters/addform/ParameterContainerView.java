@@ -1,4 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator;
+package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
 
 import java.util.List;
 
@@ -10,10 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType;
-import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.AbstractParameterView;
-import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.DependentParameterView;
-import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.ParameterRemovedEvent;
-import ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters.TerminalParameterView;
 
 /**
  * Описание представления параметра, общее для всех видов параметров
@@ -80,5 +76,27 @@ public class ParameterContainerView extends VBox
         return parameterPlace.getChildren().isEmpty()
                 ? null
                 : (AbstractParameterView)parameterPlace.getChildren().getFirst();
+    }
+
+    /**
+     * Устанавливает представление параметра в контейнер
+     */
+    public void setFilledParameter(AbstractParameterView parameterView)
+    {
+        List<Node> filledParameters = parameterPlace.getChildren();
+        if (filledParameters.isEmpty())
+        {
+            filledParameters.add(parameterView);
+        }
+        filledParameters.clear();
+        filledParameters.add(parameterView);
+    }
+
+    /**
+     * Устанавливает тип параметра, хранимого в контейнере
+     */
+    public void setParameterType(ParameterType type)
+    {
+        parameterTypes.setValue(type);
     }
 }

@@ -24,7 +24,7 @@ public final class TerminalParameter extends Parameter
     private BigDecimal maxValue;
 
     /**
-     * Шаг, с которым генерируются значения
+     * Шаг, задающий сетку области значений параметра
      */
     private BigDecimal step;
 

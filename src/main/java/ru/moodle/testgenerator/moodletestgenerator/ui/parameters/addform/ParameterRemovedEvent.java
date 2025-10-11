@@ -1,10 +1,9 @@
-package ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters;
+package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
 
 import java.io.Serial;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import ru.moodle.testgenerator.moodletestgenerator.ParameterContainerView;
 
 /**
  * Событие удаления параметра

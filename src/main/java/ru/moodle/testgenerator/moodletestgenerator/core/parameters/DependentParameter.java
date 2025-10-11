@@ -48,7 +48,7 @@ public final class DependentParameter extends Parameter
     /**
      * @return скрипт, вычисляющий параметр
      */
-    public String getEvaluationScript()
+    public String getCalculationScript()
     {
         return evaluationScript;
     }

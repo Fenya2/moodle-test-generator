@@ -1,10 +1,9 @@
-package ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters;
-
-import java.util.regex.Pattern;
+package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.DecimalField;
 
 /**
  * Параметр, значение которого не зависит от других параметров
@@ -14,7 +13,6 @@ import javafx.scene.layout.HBox;
  */
 public final class TerminalParameterView extends AbstractParameterView
 {
-    private static final Pattern FLOAT_NUMBER_PATTERN = Pattern.compile("-?\\d*(\\.\\d*)?");
     private final TextField minValueField;
     private final TextField maxValueField;
     private final TextField stepField;
@@ -23,45 +21,26 @@ public final class TerminalParameterView extends AbstractParameterView
     {
         HBox minRow = new HBox(5);
         Label minLabel = new Label("Минимальное значение:");
-        minValueField = new TextField();
+        minValueField = new DecimalField();
         minValueField.setPromptText("0.0");
-        setupNumericField(minValueField);
         minRow.getChildren().addAll(minLabel, minValueField);
 
         // Вторая строка: максимальное значение
         HBox maxRow = new HBox(5);
         Label maxLabel = new Label("Максимальное значение:");
-        maxValueField = new TextField();
+        maxValueField = new DecimalField();
         maxValueField.setPromptText("1.0");
-        setupNumericField(maxValueField);
         maxRow.getChildren().addAll(maxLabel, maxValueField);
 
         // Третья строка: шаг
         HBox stepRow = new HBox(5);
         Label stepLabel = new Label("Шаг:");
-        stepField = new TextField();
+        stepField = new DecimalField();
         stepField.setPromptText("0.1");
-        setupNumericField(stepField);
         stepRow.getChildren().addAll(stepLabel, stepField);
 
         // Устанавливаем контейнер как корневой элемент
         this.getChildren().addAll(minRow, maxRow, stepRow);
-    }
-
-    /**
-     * Настраивает текстовое поле для ввода только числовых значений
-     *
-     * @param field текстовое поле для настройки
-     */
-    private static void setupNumericField(TextField field)
-    {
-        field.textProperty().addListener((_, oldValue, newValue) ->
-        {
-            if (!FLOAT_NUMBER_PATTERN.matcher(newValue).matches())
-            {
-                field.setText(oldValue);
-            }
-        });
     }
 
     /**
@@ -86,5 +65,29 @@ public final class TerminalParameterView extends AbstractParameterView
     public String getStep()
     {
         return stepField.getText();
+    }
+
+    /**
+     * Устанавливает максимальное значение параметра
+     */
+    public void setMaxValue(String maxValue)
+    {
+        maxValueField.setText(maxValue);
+    }
+
+    /**
+     * Устанавливает минимальное значение параметра
+     */
+    public void setMinValue(String minValue)
+    {
+        minValueField.setText(minValue);
+    }
+
+    /**
+     * Устанавливает шаг параметра
+     */
+    public void setStep(String step)
+    {
+        stepField.setText(step);
     }
 }

@@ -1,0 +1,231 @@
+package ru.moodle.testgenerator.moodletestgenerator.ui.controllers;
+
+import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
+import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.QuestionPreviewController.QUESTION_PREVIEW_VIEW;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import com.google.inject.Inject;
+
+import jakarta.annotation.Nullable;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactory;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
+import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.DependentParameterView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.ParameterContainerView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.ParameterRemovedEvent;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.TerminalParameterView;
+
+/**
+ * Контроллер формы добавления вопроса. Может быть запущен в контексте заполненной ранее формы
+ *
+ * @author dsyromyatnikov
+ * @since 12.10.2025
+ */
+public class AddQuestionController implements ControllerWithContext, Initializable
+{
+    /**
+     * Представление, которое обрабатывает контроллер
+     */
+    public static final String ADD_QUESTION_FORM_VIEW = "/add-question-view.fxml";
+
+    private final NavigationService navigationService;
+
+    private final TestTaskGeneratorFactory testTaskGeneratorFactory;
+
+    /**
+     * Форма, которую ранее заполнял пользователь
+     */
+    @Nullable
+    private AddQuestionForm addForm;
+
+    @FXML
+    public Label errorLabel;
+
+    @FXML
+    private TextArea questionField;
+
+    @FXML
+    private VBox parametersContainer;
+
+    @FXML
+    private TextField answerField;
+
+    @Inject
+    public AddQuestionController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory)
+    {
+        this.navigationService = navigationService;
+        this.testTaskGeneratorFactory = testTaskGeneratorFactory;
+    }
+
+    @Override
+    public void setContext(Object context)
+    {
+        this.addForm = (AddQuestionForm)context;
+    }
+
+    /**
+     * Если контроллер был создан с контекстом заполненной ранее формы, выводит значения из формы в представление
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources)
+    {
+        if (addForm == null)
+        {
+            return;
+        }
+
+        questionField.setText(addForm.getQuestion());
+        for (Parameter parameter : addForm.getParameters())
+        {
+            ParameterContainerView parameterContainer = new ParameterContainerView();
+            parameterContainer.addEventHandler(ParameterRemovedEvent.REMOVE_PARAMETER, this::onRemoveParameterClick);
+
+            switch (parameter)
+            {
+                case TerminalParameter terminalParameter ->
+                {
+                    parameterContainer.setParameterType(TERMINAL);
+
+                    TerminalParameterView terminalParameterView = new TerminalParameterView();
+                    terminalParameterView.setName(terminalParameter.getName());
+                    terminalParameterView.setMaxValue(terminalParameter.getMaxValue().toPlainString());
+                    terminalParameterView.setMinValue(terminalParameter.getMinValue().toPlainString());
+                    terminalParameterView.setStep(terminalParameter.getStep().toPlainString());
+
+                    parameterContainer.setFilledParameter(terminalParameterView);
+                }
+                case DependentParameter dependentParameter ->
+                {
+                    parameterContainer.setParameterType(DEPENDENT);
+
+                    DependentParameterView dependentParameterView = new DependentParameterView();
+                    dependentParameterView.setName(dependentParameter.getName());
+                    dependentParameter.getDependentParameterNames().forEach(dependentParameterView::addDependencyRow);
+                    dependentParameterView.setEvaluationScript(dependentParameter.getCalculationScript());
+
+                    parameterContainer.setFilledParameter(dependentParameterView);
+                }
+            }
+            parametersContainer.getChildren().add(parameterContainer);
+        }
+
+        if (!parametersContainer.getChildren().isEmpty())
+        {
+            parametersContainer.setVisible(true);
+        }
+
+        answerField.setText(addForm.getAnswer());
+    }
+
+    /**
+     * Обрабатывает событие нажатия на кнопку добавления параметра
+     */
+    @FXML
+    private void onAddParameterClick()
+    {
+        List<Node> parameterViews = getParameterViews();
+        ParameterContainerView parameter = new ParameterContainerView();
+        parameter.addEventHandler(ParameterRemovedEvent.REMOVE_PARAMETER, this::onRemoveParameterClick);
+        if (!parameterViews.isEmpty())
+        {
+            parametersContainer.setVisible(true);
+        }
+        parameterViews.add(parameter);
+        parametersContainer.setVisible(true);
+        parametersContainer.setManaged(true);
+    }
+
+    /**
+     * Обрабатывает событие удаления параметра
+     */
+    private void onRemoveParameterClick(ParameterRemovedEvent event)
+    {
+        List<Node> parameterViews = getParameterViews();
+        parameterViews.remove(event.getParameter());
+        if (parameterViews.isEmpty())
+        {
+            parametersContainer.setVisible(false);
+        }
+    }
+
+    /**
+     * Обрабатывает событие нажатия на кнопку сохранения вопроса
+     */
+    @FXML
+    private void onSubmitButton()
+    {
+        try
+        {
+            navigationService.navigateTo(QUESTION_PREVIEW_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
+        }
+        catch (Exception e)
+        {
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+        }
+    }
+
+    /**
+     * Собирает данные с формы и формирует объект формы
+     */
+    private AddQuestionForm collectDataOnForm()
+    {
+        String question = questionField.getText();
+        List<Parameter> parameters = getParameterViews().stream().map(ParameterContainerView.class::cast)
+                .map(ParameterContainerView::getFilledParameter)
+                .filter(Objects::nonNull)
+                .map(filledParameter -> switch (filledParameter)
+                {
+                    case TerminalParameterView terminalParamView ->
+                    {
+                        TerminalParameter terminalParam = new TerminalParameter(terminalParamView.getName());
+                        try
+                        {
+                            terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
+                            terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
+                            terminalParam.setStep(new BigDecimal(terminalParamView.getStep()));
+                        }
+                        catch (NumberFormatException _)
+                        {
+                            throw new InvalidNumberFormatException(
+                                    "Неверно заданы допустимые значения параметра %s".formatted(
+                                            terminalParam.getName()));
+                        }
+                        yield terminalParam;
+                    }
+                    case DependentParameterView dependentParamView ->
+                    {
+                        DependentParameter dependentParameter = new DependentParameter(dependentParamView.getName());
+                        dependentParameter.setDependentParameters(dependentParamView.getDependencies());
+                        dependentParameter.setEvaluationScript(dependentParamView.getEvaluationScript());
+                        yield dependentParameter;
+                    }
+                }).toList();
+        String answer = answerField.getText();
+        return new AddQuestionForm(question, parameters, answer);
+    }
+
+    /**
+     * @return добавленные описания параметров на форме
+     */
+    private List<Node> getParameterViews()
+    {
+        return parametersContainer.getChildren();
+    }
+}

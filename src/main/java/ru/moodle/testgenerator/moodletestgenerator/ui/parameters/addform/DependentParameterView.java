@@ -1,4 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator.uicomponents.parameters;
+package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,5 +95,13 @@ public final class DependentParameterView extends AbstractParameterView
     public String getEvaluationScript()
     {
         return scriptArea.getText();
+    }
+
+    /**
+     * Заполняет поле скрипта вычисления параметра
+     */
+    public void setEvaluationScript(String script)
+    {
+        this.scriptArea.setText(script);
     }
 }

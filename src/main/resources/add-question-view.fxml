@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
-			fx:controller="ru.moodle.testgenerator.moodletestgenerator.uicomponents.forms.AddQuestionController"
+			fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController"
 			fitToWidth="true" fitToHeight="true">
 
 	<!-- Подключаем CSS -->
@@ -47,7 +47,6 @@
 
 		<VBox fx:id="parametersContainer" visible="false" spacing="10"
 			  style="-fx-border-color: lightgray; -fx-padding: 10;">
-			<!-- Здесь будут добавляться элементы параметров -->
 		</VBox>
 
 		<Button text="+" onAction="#onAddParameterClick"/>
@@ -59,6 +58,9 @@
 			   wrapText="true"
 			   style="-fx-text-fill: black; -fx-background-color: red; -fx-padding: 10;"
 			   visible="false"/>
-		<Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
+
+		<HBox alignment="TOP_RIGHT">
+			<Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
+		</HBox>
 	</VBox>
 </ScrollPane>

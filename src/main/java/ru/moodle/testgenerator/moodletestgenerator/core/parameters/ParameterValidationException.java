@@ -3,7 +3,8 @@ package ru.moodle.testgenerator.moodletestgenerator.core.parameters;
 import ru.moodle.testgenerator.moodletestgenerator.core.InputException;
 
 /**
- * Исключение, связанное с неправильным описанием параметров
+ * Исключение, возникающее, когда описан терминальный параметр с пустой областью определения.
+ * То есть указанное минимальное значение параметра больше указанного максимального значения параметра
  *
  * @author dsyromyatnikov
  * @since 05.10.2025

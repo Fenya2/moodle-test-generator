@@ -6,7 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import ru.moodle.testgenerator.moodletestgenerator.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
@@ -23,7 +25,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController.ADD_QUESTION_FORM_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_QUESTION_FORM_VIEW;
 
 /**
  * Контроллер формы предпросмотра составленного вопроса. Подразумевается, что пользователь уже описал вопрос и по
@@ -32,26 +34,32 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQues
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class QuestionPreviewController implements ControllerWithContext, Initializable {
+public class TestPreviewController implements ControllerWithContext, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String QUESTION_PREVIEW_VIEW = "/question-preview-view.fxml";
+    public static final String QUESTION_PREVIEW_VIEW = "/att-task-preview-view.fxml";
 
     private final NavigationService navigationService;
     private final ParameterRandomizer parameterRandomizer;
+    /**
+     * Представление с записанным вопросом задания
+     */
     @FXML
     public TextArea questionTextArea;
     @FXML
     public VBox terminalParamsContainer;
     @FXML
     public VBox dependentParamsContainer;
+    /**
+     * Представление с записанным ответом на задание
+     */
     @FXML
     public TextArea answerTextArea;
     private TestTaskGenerator testTaskGenerator;
 
     @Inject
-    public QuestionPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
+    public TestPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
         this.navigationService = navigationService;
         this.parameterRandomizer = parameterRandomizer;
     }
@@ -112,11 +120,15 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
     @FXML
     public void onCalculateClick() {
         Map<String, BigDecimal> terminalParamsValues = collectTerminalParamsValuesOnForm();
-        Map<String, BigDecimal> paramsValues = testTaskGenerator.generateTestTask(terminalParamsValues);
+        TestTaskGenerationResult result = testTaskGenerator.generateTestTask(terminalParamsValues);
+        TestTask task = result.getTestTask();
+        questionTextArea.setText(task.getQuestion());
+        answerTextArea.setText(task.getAnswer());
+        Map<String, BigDecimal> calculatedParameters = result.getParameters();
         getTerminalParameterPreviewViewStream().forEach(view ->
-                view.setValue(paramsValues.get(view.getParameterName()).toPlainString()));
+                view.setValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
         getDependentParameterPreviewViewStream().forEach(
-                view -> view.setParameterValue(paramsValues.get(view.getParameterName()).toPlainString()));
+                view -> view.setParameterValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
     }
 
     /**

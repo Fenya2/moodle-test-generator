@@ -6,7 +6,7 @@
 <?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.QuestionPreviewController"
+            fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestPreviewController"
             fitToWidth="true"
             vbarPolicy="ALWAYS">
 

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
+import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
 
 /**
  * Фабрика генераторов вопросов
@@ -14,14 +15,16 @@ import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalcul
 @Singleton
 public class TestTaskGeneratorFactoryImpl implements TestTaskGeneratorFactory {
     private final ScriptCalculator scriptCalculator;
+    private final TemplateEngine templateEngine;
 
     @Inject
-    public TestTaskGeneratorFactoryImpl(ScriptCalculator scriptCalculator) {
+    public TestTaskGeneratorFactoryImpl(ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
         this.scriptCalculator = scriptCalculator;
+        this.templateEngine = templateEngine;
     }
 
     @Override
     public TestTaskGenerator create(AddQuestionForm form) {
-        return new TestTaskGenerator(form, scriptCalculator);
+        return new TestTaskGenerator(form, scriptCalculator, templateEngine);
     }
 }

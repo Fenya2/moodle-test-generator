@@ -2,9 +2,11 @@ package ru.moodle.testgenerator.moodletestgenerator.core;
 
 import com.google.inject.Inject;
 import jakarta.annotation.Nullable;
+import ru.moodle.testgenerator.moodletestgenerator.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.*;
+import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -28,17 +30,18 @@ public class TestTaskGenerator {
      * Граф зависимостей параметров
      */
     private final Map<String, Set<String>> parametersDependencyGraph;
+    private final TemplateEngine templateEngine;
     private final ScriptCalculator scriptCalculator;
     /**
      * Отображение из имени параметра в его полное описание
      */
     private Map<String, Parameter> parameterDefinitions;
 
-    @Inject
-    public TestTaskGenerator(AddQuestionForm form, ScriptCalculator scriptCalculator) {
+    public TestTaskGenerator(AddQuestionForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
         this.form = form;
         this.scriptCalculator = scriptCalculator;
-        parametersDependencyGraph = new HashMap<>();
+        this.templateEngine = templateEngine;
+        this.parametersDependencyGraph = new HashMap<>();
         validateAndPrepare(form);
     }
 
@@ -250,10 +253,16 @@ public class TestTaskGenerator {
      * Генерирует вопрос по заданным значениям терминальных параметров, предварительно проверив, что они лежат в
      * допустимой области значений заданных пользователем терминальных параметров. Для этого рекурсивно вычисляет все
      * параметры
+     *
+     * @return результат генерации скрипта
      */
-    public Map<String, BigDecimal> generateTestTask(Map<String, BigDecimal> terminalParameterValues) {
+    public TestTaskGenerationResult generateTestTask(Map<String, BigDecimal> terminalParameterValues) {
         checkAllTerminalParametersDefinedCorrectly(terminalParameterValues);
-        return calculateParameters(terminalParameterValues);
+        Map<String, BigDecimal> calculatedParameters = calculateParameters(terminalParameterValues);
+        String calculatedQuestion = templateEngine.render(getForm().getQuestion(), calculatedParameters);
+        String calculatedAnswer = templateEngine.render(getForm().getAnswer(), calculatedParameters);
+        TestTask testTask = new TestTask(calculatedQuestion, calculatedAnswer);
+        return new TestTaskGenerationResult(testTask, calculatedParameters);
     }
 
     /**

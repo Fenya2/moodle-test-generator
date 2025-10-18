@@ -1,7 +1,7 @@
 package ru.moodle.testgenerator.moodletestgenerator.core;
 
 /**
- * Тестовое упражнение с единственным вариантом ответа
+ * Тестовое упражнение с единственным текстовым вариантом ответа
  *
  * @author dsyromyatnikov
  * @since 16.10.2025

@@ -1,66 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
-			fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController"
-			fitToWidth="true" fitToHeight="true">
+            fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController"
+            fitToWidth="true" fitToHeight="true">
 
-	<!-- Подключаем CSS -->
-	<stylesheets>
-		<URL value="@styles.css"/>
-	</stylesheets>
+    <!-- Подключаем CSS -->
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
 
-	<VBox spacing="15">
-		<padding>
-			<Insets top="20" right="20" bottom="20" left="20"/>
-		</padding>
+    <VBox spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-		<HBox spacing="5" alignment="CENTER_LEFT">
-			<Label text="Добавление вопроса" styleClass="header-label"/>
-			<Label text="?" styleClass="tooltip-label">
-				<tooltip>
-					<Tooltip text="#todo добавить описание возможностей ввода вопроса"/>
-				</tooltip>
-			</Label>
-		</HBox>
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Добавление вопроса" styleClass="header-label"/>
+            <Label text="?" styleClass="tooltip-label">
+                <tooltip>
+                    <Tooltip text="#todo добавить описание возможностей ввода вопроса"/>
+                </tooltip>
+            </Label>
+        </HBox>
 
-		<TextArea fx:id="questionField" promptText="Введите текст вопроса"
-				  prefRowCount="4" wrapText="true"/>
+        <TextArea fx:id="questionField" promptText="Введите текст вопроса"
+                  prefRowCount="4" wrapText="true"/>
 
-		<HBox spacing="5" alignment="CENTER_LEFT">
-			<Label text="Параметры" styleClass="header-label"/>
-			<Label text="?" styleClass="tooltip-label">
-				<tooltip>
-					<Tooltip text="Нажмите +, чтобы добавить новый параметр к вопросу"/>
-				</tooltip>
-			</Label>
-		</HBox>
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Параметры" styleClass="header-label"/>
+            <Label text="?" styleClass="tooltip-label">
+                <tooltip>
+                    <Tooltip text="Нажмите +, чтобы добавить новый параметр к вопросу"/>
+                </tooltip>
+            </Label>
+        </HBox>
 
-		<VBox fx:id="parametersContainer" visible="false" spacing="10"
-			  style="-fx-border-color: lightgray; -fx-padding: 10;">
-		</VBox>
+        <VBox fx:id="parametersContainer" visible="false" spacing="10"
+              style="-fx-border-color: lightgray; -fx-padding: 10;">
+        </VBox>
 
-		<Button text="+" onAction="#onAddParameterClick"/>
+        <Button text="+" onAction="#onAddParameterClick"/>
 
-		<Label text="Поле ответа" styleClass="header-label"/>
-		<TextField fx:id="answerField" promptText="Введите ответ"/>
+        <Label text="Поле ответа" styleClass="header-label"/>
+        <TextField fx:id="answerField" promptText="Введите ответ"/>
 
-		<Label fx:id="errorLabel"
-			   wrapText="true"
-			   style="-fx-text-fill: black; -fx-background-color: red; -fx-padding: 10;"
-			   visible="false"/>
+        <Label fx:id="errorLabel"
+               wrapText="true"
+               style="-fx-text-fill: black; -fx-background-color: red; -fx-padding: 10;"
+               visible="false"/>
 
-		<HBox alignment="TOP_RIGHT">
-			<Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
-		</HBox>
-	</VBox>
+        <HBox alignment="TOP_RIGHT">
+            <Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
+        </HBox>
+    </VBox>
 </ScrollPane>

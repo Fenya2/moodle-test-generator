@@ -11,13 +11,11 @@ import javafx.scene.layout.HBox;
  * @since 17.10.2025
  */
 public abstract sealed class AbstractParameterPreviewView extends HBox
-        permits TerminalParameterPreviewView, DependentParameterPreviewView
-{
+        permits TerminalParameterPreviewView, DependentParameterPreviewView {
 
     private final Label parameterName;
 
-    protected AbstractParameterPreviewView(String parameterName)
-    {
+    protected AbstractParameterPreviewView(String parameterName) {
         super(10);
         this.parameterName = new Label(parameterName);
         this.getChildren().addAll(this.parameterName, new Label(":"));
@@ -26,8 +24,7 @@ public abstract sealed class AbstractParameterPreviewView extends HBox
     /**
      * @return имя параметра
      */
-    public String getParameterName()
-    {
+    public String getParameterName() {
         return parameterName.getText();
     }
 }

@@ -8,10 +8,8 @@ import ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterVali
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class InvalidNumberFormatException extends ParameterValidationException
-{
-    public InvalidNumberFormatException(String messge)
-    {
+public class InvalidNumberFormatException extends ParameterValidationException {
+    public InvalidNumberFormatException(String messge) {
         super(messge);
     }
 }

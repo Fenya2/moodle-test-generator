@@ -6,8 +6,7 @@ package ru.moodle.testgenerator.moodletestgenerator.core;
  * @author dsyromyatnikov
  * @since 16.10.2025
  */
-public class TestTask
-{
+public class TestTask {
     /**
      * Вопрос
      */
@@ -18,19 +17,16 @@ public class TestTask
      */
     private final String answer;
 
-    public TestTask(String question, String answer)
-    {
+    public TestTask(String question, String answer) {
         this.question = question;
         this.answer = answer;
     }
 
-    public String getQuestion()
-    {
+    public String getQuestion() {
         return question;
     }
 
-    public String getAnswer()
-    {
+    public String getAnswer() {
         return answer;
     }
 }

@@ -1,17 +1,6 @@
 package ru.moodle.testgenerator.moodletestgenerator.ui.controllers;
 
-import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
-import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.QuestionPreviewController.QUESTION_PREVIEW_VIEW;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
 import com.google.inject.Inject;
-
 import jakarta.annotation.Nullable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,14 +20,23 @@ import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.Paramet
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.ParameterRemovedEvent;
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.TerminalParameterView;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
+import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.QuestionPreviewController.QUESTION_PREVIEW_VIEW;
+
 /**
  * Контроллер формы добавления вопроса. Может быть запущен в контексте заполненной ранее формы
  *
  * @author dsyromyatnikov
  * @since 12.10.2025
  */
-public class AddQuestionController implements ControllerWithContext, Initializable
-{
+public class AddQuestionController implements ControllerWithContext, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
@@ -47,16 +45,13 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     private final NavigationService navigationService;
 
     private final TestTaskGeneratorFactory testTaskGeneratorFactory;
-
+    @FXML
+    public Label errorLabel;
     /**
      * Форма, которую ранее заполнял пользователь
      */
     @Nullable
     private AddQuestionForm addForm;
-
-    @FXML
-    public Label errorLabel;
-
     @FXML
     private TextArea questionField;
 
@@ -67,39 +62,32 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     private TextField answerField;
 
     @Inject
-    public AddQuestionController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory)
-    {
+    public AddQuestionController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory) {
         this.navigationService = navigationService;
         this.testTaskGeneratorFactory = testTaskGeneratorFactory;
     }
 
     @Override
-    public void setContext(Object context)
-    {
-        this.addForm = (AddQuestionForm)context;
+    public void setContext(Object context) {
+        this.addForm = (AddQuestionForm) context;
     }
 
     /**
      * Если контроллер был создан с контекстом заполненной ранее формы, выводит значения из формы в представление
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
-        if (addForm == null)
-        {
+    public void initialize(URL location, ResourceBundle resources) {
+        if (addForm == null) {
             return;
         }
 
         questionField.setText(addForm.getQuestion());
-        for (Parameter parameter : addForm.getParameters())
-        {
+        for (Parameter parameter : addForm.getParameters()) {
             ParameterContainerView parameterContainer = new ParameterContainerView();
             parameterContainer.addEventHandler(ParameterRemovedEvent.REMOVE_PARAMETER, this::onRemoveParameterClick);
 
-            switch (parameter)
-            {
-                case TerminalParameter terminalParameter ->
-                {
+            switch (parameter) {
+                case TerminalParameter terminalParameter -> {
                     parameterContainer.setParameterType(TERMINAL);
 
                     TerminalParameterView terminalParameterView = new TerminalParameterView();
@@ -110,8 +98,7 @@ public class AddQuestionController implements ControllerWithContext, Initializab
 
                     parameterContainer.setFilledParameter(terminalParameterView);
                 }
-                case DependentParameter dependentParameter ->
-                {
+                case DependentParameter dependentParameter -> {
                     parameterContainer.setParameterType(DEPENDENT);
 
                     DependentParameterView dependentParameterView = new DependentParameterView();
@@ -125,8 +112,7 @@ public class AddQuestionController implements ControllerWithContext, Initializab
             parametersContainer.getChildren().add(parameterContainer);
         }
 
-        if (!parametersContainer.getChildren().isEmpty())
-        {
+        if (!parametersContainer.getChildren().isEmpty()) {
             parametersContainer.setVisible(true);
         }
 
@@ -137,13 +123,11 @@ public class AddQuestionController implements ControllerWithContext, Initializab
      * Обрабатывает событие нажатия на кнопку добавления параметра
      */
     @FXML
-    private void onAddParameterClick()
-    {
+    private void onAddParameterClick() {
         List<Node> parameterViews = getParameterViews();
         ParameterContainerView parameter = new ParameterContainerView();
         parameter.addEventHandler(ParameterRemovedEvent.REMOVE_PARAMETER, this::onRemoveParameterClick);
-        if (!parameterViews.isEmpty())
-        {
+        if (!parameterViews.isEmpty()) {
             parametersContainer.setVisible(true);
         }
         parameterViews.add(parameter);
@@ -154,12 +138,10 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     /**
      * Обрабатывает событие удаления параметра
      */
-    private void onRemoveParameterClick(ParameterRemovedEvent event)
-    {
+    private void onRemoveParameterClick(ParameterRemovedEvent event) {
         List<Node> parameterViews = getParameterViews();
         parameterViews.remove(event.getParameter());
-        if (parameterViews.isEmpty())
-        {
+        if (parameterViews.isEmpty()) {
             parametersContainer.setVisible(false);
         }
     }
@@ -168,14 +150,10 @@ public class AddQuestionController implements ControllerWithContext, Initializab
      * Обрабатывает событие нажатия на кнопку сохранения вопроса
      */
     @FXML
-    private void onSubmitButton()
-    {
-        try
-        {
+    private void onSubmitButton() {
+        try {
             navigationService.navigateTo(QUESTION_PREVIEW_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             errorLabel.setText(e.getMessage());
             errorLabel.setVisible(true);
         }
@@ -184,33 +162,26 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     /**
      * Собирает данные с формы и формирует объект формы
      */
-    private AddQuestionForm collectDataOnForm()
-    {
+    private AddQuestionForm collectDataOnForm() {
         String question = questionField.getText();
         List<Parameter> parameters = getParameterViews().stream().map(ParameterContainerView.class::cast)
                 .map(ParameterContainerView::getFilledParameter)
                 .filter(Objects::nonNull)
-                .map(filledParameter -> switch (filledParameter)
-                {
-                    case TerminalParameterView terminalParamView ->
-                    {
+                .map(filledParameter -> switch (filledParameter) {
+                    case TerminalParameterView terminalParamView -> {
                         TerminalParameter terminalParam = new TerminalParameter(terminalParamView.getName());
-                        try
-                        {
+                        try {
                             terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
                             terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
                             terminalParam.setStep(new BigDecimal(terminalParamView.getStep()));
-                        }
-                        catch (NumberFormatException _)
-                        {
+                        } catch (NumberFormatException _) {
                             throw new InvalidNumberFormatException(
                                     "Неверно заданы допустимые значения параметра %s".formatted(
                                             terminalParam.getName()));
                         }
                         yield terminalParam;
                     }
-                    case DependentParameterView dependentParamView ->
-                    {
+                    case DependentParameterView dependentParamView -> {
                         DependentParameter dependentParameter = new DependentParameter(dependentParamView.getName());
                         dependentParameter.setDependentParameters(dependentParamView.getDependencies());
                         dependentParameter.setEvaluationScript(dependentParamView.getEvaluationScript());
@@ -224,8 +195,7 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     /**
      * @return добавленные описания параметров на форме
      */
-    private List<Node> getParameterViews()
-    {
+    private List<Node> getParameterViews() {
         return parametersContainer.getChildren();
     }
 }

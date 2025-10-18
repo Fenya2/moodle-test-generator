@@ -1,9 +1,9 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.interpreter;
 
+import jakarta.annotation.Nullable;
+
 import java.math.BigDecimal;
 import java.util.Map;
-
-import jakarta.annotation.Nullable;
 
 /**
  * Сервис вычисления скриптов
@@ -11,12 +11,11 @@ import jakarta.annotation.Nullable;
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public interface ScriptCalculator
-{
+public interface ScriptCalculator {
     /**
      * Вычисляет функцию нескольких переменных, заданную в виде скрипта на python
      *
-     * @param calculationScript скрипт
+     * @param calculationScript  скрипт
      * @param dependenciesValues карта имя-значение переменных
      */
     @Nullable

@@ -9,15 +9,12 @@ import ru.moodle.testgenerator.moodletestgenerator.core.InputException;
  * @author dsyromyatnikov
  * @since 05.10.2025
  */
-public class ParameterValidationException extends InputException
-{
-    public ParameterValidationException(String message)
-    {
+public class ParameterValidationException extends InputException {
+    public ParameterValidationException(String message) {
         super(message);
     }
 
-    public ParameterValidationException(String message, Exception e)
-    {
+    public ParameterValidationException(String message, Exception e) {
         super(message, e);
     }
 }

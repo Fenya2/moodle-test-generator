@@ -1,8 +1,5 @@
 package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -10,19 +7,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Параметр, значение которого зависит от других параметров
  *
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public final class DependentParameterView extends AbstractParameterView
-{
+public final class DependentParameterView extends AbstractParameterView {
     private final VBox dependenciesContainer;
     private final TextArea scriptArea;
 
-    public DependentParameterView()
-    {
+    public DependentParameterView() {
         // Секция зависимостей
         VBox dependenciesSection = new VBox(5);
         dependenciesContainer = new VBox(5);
@@ -45,8 +43,7 @@ public final class DependentParameterView extends AbstractParameterView
     /**
      * Добавляет новое поле для ввода имени зависимого параметра
      */
-    private void addDependencyRow()
-    {
+    private void addDependencyRow() {
         HBox dependencyRow = new HBox(5);
         TextField dependencyField = new TextField();
         dependencyField.setPromptText("a");
@@ -61,8 +58,7 @@ public final class DependentParameterView extends AbstractParameterView
      *
      * @return массив имен параметров
      */
-    public Set<String> getDependencies()
-    {
+    public Set<String> getDependencies() {
         return dependenciesContainer.getChildren().stream()
                 .map(HBox.class::cast)
                 .map(hBox -> hBox.getChildren().getFirst())
@@ -76,8 +72,7 @@ public final class DependentParameterView extends AbstractParameterView
      *
      * @param parameterName имя параметра
      */
-    public void addDependencyRow(String parameterName)
-    {
+    public void addDependencyRow(String parameterName) {
         HBox dependencyRow = new HBox(5);
         TextField dependencyField = new TextField();
         dependencyField.setText(parameterName);
@@ -92,16 +87,14 @@ public final class DependentParameterView extends AbstractParameterView
      *
      * @return строка с выражением
      */
-    public String getEvaluationScript()
-    {
+    public String getEvaluationScript() {
         return scriptArea.getText();
     }
 
     /**
      * Заполняет поле скрипта вычисления параметра
      */
-    public void setEvaluationScript(String script)
-    {
+    public void setEvaluationScript(String script) {
         this.scriptArea.setText(script);
     }
 }

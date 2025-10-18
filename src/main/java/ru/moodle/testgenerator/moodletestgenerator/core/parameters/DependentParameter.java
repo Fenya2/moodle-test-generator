@@ -10,8 +10,7 @@ import java.util.Set;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public final class DependentParameter extends Parameter
-{
+public final class DependentParameter extends Parameter {
     /**
      * Имена параметров, от которых зависит данный параметр
      */
@@ -22,8 +21,7 @@ public final class DependentParameter extends Parameter
      */
     private String evaluationScript;
 
-    public DependentParameter(String name)
-    {
+    public DependentParameter(String name) {
         super(name);
         this.dependentParameterNames = new HashSet<>();
     }
@@ -31,8 +29,7 @@ public final class DependentParameter extends Parameter
     /**
      * Добавляет параметры с перечисленными именами в зависимые параметры
      */
-    public void setDependentParameters(Set<String> parameterNames)
-    {
+    public void setDependentParameters(Set<String> parameterNames) {
         dependentParameterNames.addAll(parameterNames);
     }
 
@@ -40,21 +37,18 @@ public final class DependentParameter extends Parameter
      * @return имена зависимых параметров
      * @implNote возвращается неизменяемая коллекция
      */
-    public Set<String> getDependentParameterNames()
-    {
+    public Set<String> getDependentParameterNames() {
         return Collections.unmodifiableSet(dependentParameterNames);
     }
 
     /**
      * @return скрипт, вычисляющий параметр
      */
-    public String getCalculationScript()
-    {
+    public String getCalculationScript() {
         return evaluationScript;
     }
 
-    public void setEvaluationScript(String evaluationScript)
-    {
+    public void setEvaluationScript(String evaluationScript) {
         this.evaluationScript = evaluationScript;
     }
 }

@@ -1,16 +1,6 @@
 package ru.moodle.testgenerator.moodletestgenerator.ui.controllers;
 
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController.ADD_QUESTION_FORM_VIEW;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.stream.Stream;
-
 import com.google.inject.Inject;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -26,6 +16,15 @@ import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.DependentParameterPreviewView;
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.TerminalParameterPreviewView;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.stream.Stream;
+
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController.ADD_QUESTION_FORM_VIEW;
+
 /**
  * Контроллер формы предпросмотра составленного вопроса. Подразумевается, что пользователь уже описал вопрос и по
  * вопросу сгенерировался генератор {@link TestTaskGenerator}. То есть контроллер начинает работу с контекстом
@@ -33,8 +32,7 @@ import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.Ter
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class QuestionPreviewController implements ControllerWithContext, Initializable
-{
+public class QuestionPreviewController implements ControllerWithContext, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
@@ -42,9 +40,6 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
 
     private final NavigationService navigationService;
     private final ParameterRandomizer parameterRandomizer;
-
-    private TestTaskGenerator testTaskGenerator;
-
     @FXML
     public TextArea questionTextArea;
     @FXML
@@ -53,18 +48,17 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
     public VBox dependentParamsContainer;
     @FXML
     public TextArea answerTextArea;
+    private TestTaskGenerator testTaskGenerator;
 
     @Inject
-    public QuestionPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer)
-    {
+    public QuestionPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
         this.navigationService = navigationService;
         this.parameterRandomizer = parameterRandomizer;
     }
 
     @Override
-    public void setContext(Object context)
-    {
-        this.testTaskGenerator = (TestTaskGenerator)context;
+    public void setContext(Object context) {
+        this.testTaskGenerator = (TestTaskGenerator) context;
     }
 
     /**
@@ -72,18 +66,15 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
      * предпросмотра
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
+    public void initialize(URL location, ResourceBundle resources) {
         AddQuestionForm form = getQuestionForm();
         questionTextArea.setText(form.getQuestion());
 
         List<Node> terminalParameters = terminalParamsContainer.getChildren();
         List<Node> dependentParameters = dependentParamsContainer.getChildren();
 
-        for (Parameter parameter : form.getParameters())
-        {
-            switch (parameter)
-            {
+        for (Parameter parameter : form.getParameters()) {
+            switch (parameter) {
                 case TerminalParameter terminalParameter ->
                         terminalParameters.add(new TerminalParameterPreviewView(terminalParameter));
                 case DependentParameter dependentParameter ->
@@ -98,8 +89,7 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
      * Обрабатывает событие нажатия на кнопку случайного заполнения терминальных параметров
      */
     @FXML
-    public void onFillRandomClick()
-    {
+    public void onFillRandomClick() {
         List<TerminalParameter> terminalParameters = getTerminalParametersOnForm();
         Map<String, BigDecimal> randomParametersValues = parameterRandomizer.randomizeTerminalParameters(
                 terminalParameters);
@@ -120,8 +110,7 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
      * <li>Выводит вычисленные параметры, вопрос и ответ</li>
      */
     @FXML
-    public void onCalculateClick()
-    {
+    public void onCalculateClick() {
         Map<String, BigDecimal> terminalParamsValues = collectTerminalParamsValuesOnForm();
         Map<String, BigDecimal> paramsValues = testTaskGenerator.generateTestTask(terminalParamsValues);
         getTerminalParameterPreviewViewStream().forEach(view ->
@@ -134,22 +123,17 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
      * Сначала вычисляет случайные значения всех терминальных параметров, затем часть заменяет значениями, выведенными
      * в представлениях терминальных параметров
      */
-    private Map<String, BigDecimal> collectTerminalParamsValuesOnForm()
-    {
+    private Map<String, BigDecimal> collectTerminalParamsValuesOnForm() {
         Map<String, BigDecimal> randomizedValues = parameterRandomizer.randomizeTerminalParameters(
                 getTerminalParametersOnForm());
         getTerminalParameterPreviewViewStream().forEach(view ->
                 {
                     String parameterValue = view.getParameterValue();
-                    try
-                    {
-                        if (!parameterValue.isEmpty())
-                        {
+                    try {
+                        if (!parameterValue.isEmpty()) {
                             randomizedValues.put(view.getParameterName(), new BigDecimal(parameterValue));
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -160,20 +144,17 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
     /**
      * @return поток открытых представлений для предпросмотра терминальных параметров
      */
-    private Stream<TerminalParameterPreviewView> getTerminalParameterPreviewViewStream()
-    {
+    private Stream<TerminalParameterPreviewView> getTerminalParameterPreviewViewStream() {
         return terminalParamsContainer.getChildren().stream()
                 .map(TerminalParameterPreviewView.class::cast);
     }
 
-    private Stream<DependentParameterPreviewView> getDependentParameterPreviewViewStream()
-    {
+    private Stream<DependentParameterPreviewView> getDependentParameterPreviewViewStream() {
         return dependentParamsContainer.getChildren().stream()
                 .map(DependentParameterPreviewView.class::cast);
     }
 
-    private List<TerminalParameter> getTerminalParametersOnForm()
-    {
+    private List<TerminalParameter> getTerminalParametersOnForm() {
         return getQuestionForm().getParameters().stream()
                 .filter(TerminalParameter.class::isInstance)
                 .map(TerminalParameter.class::cast).toList();
@@ -183,21 +164,18 @@ public class QuestionPreviewController implements ControllerWithContext, Initial
      * Обрабатывает событие нажатия на кнопку "Продолжить"
      */
     @FXML
-    public void onContinueClick()
-    {
+    public void onContinueClick() {
         System.out.println("Кликнули на продолжить");
     }
 
     /**
      * Обрабатывает событие нажатия на кнопку "Вернуться"
      */
-    public void onBackClick()
-    {
+    public void onBackClick() {
         navigationService.navigateTo(ADD_QUESTION_FORM_VIEW, testTaskGenerator.getForm());
     }
 
-    private AddQuestionForm getQuestionForm()
-    {
+    private AddQuestionForm getQuestionForm() {
         return testTaskGenerator.getForm();
     }
 }

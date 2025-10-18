@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestPreviewController.QUESTION_PREVIEW_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTaskPreviewController.QUESTION_PREVIEW_VIEW;
 
 /**
  * Контроллер формы добавления задания. Может быть запущен в контексте заполненной ранее формы
@@ -46,7 +46,7 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
 
     private final TestTaskGeneratorFactory testTaskGeneratorFactory;
     @FXML
-    public Label errorLabel;
+    private Label errorLabel;
     /**
      * Форма, которую ранее заполнял пользователь
      */

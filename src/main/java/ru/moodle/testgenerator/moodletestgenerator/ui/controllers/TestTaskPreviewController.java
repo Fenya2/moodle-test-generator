@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.TestTaskGenerationResult;
@@ -16,6 +17,7 @@ import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.DependentParameterPreviewView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.QuestionAreaPreviewView;
 import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.TerminalParameterPreviewView;
 
 import java.math.BigDecimal;
@@ -34,19 +36,22 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTest
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class TestPreviewController implements ControllerWithContext, Initializable {
+public class TestTaskPreviewController implements ControllerWithContext, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String QUESTION_PREVIEW_VIEW = "/att-task-preview-view.fxml";
+    public static final String QUESTION_PREVIEW_VIEW = "/add-task-preview-view.fxml";
 
     private final NavigationService navigationService;
     private final ParameterRandomizer parameterRandomizer;
+
+    @FXML
+    private Label errorLabel;
     /**
      * Представление с записанным вопросом задания
      */
     @FXML
-    public TextArea questionTextArea;
+    public QuestionAreaPreviewView questionView;
     @FXML
     public VBox terminalParamsContainer;
     @FXML
@@ -59,7 +64,7 @@ public class TestPreviewController implements ControllerWithContext, Initializab
     private TestTaskGenerator testTaskGenerator;
 
     @Inject
-    public TestPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
+    public TestTaskPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
         this.navigationService = navigationService;
         this.parameterRandomizer = parameterRandomizer;
     }
@@ -76,11 +81,8 @@ public class TestPreviewController implements ControllerWithContext, Initializab
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         AddQuestionForm form = getQuestionForm();
-        questionTextArea.setText(form.getQuestion());
-
         List<Node> terminalParameters = terminalParamsContainer.getChildren();
         List<Node> dependentParameters = dependentParamsContainer.getChildren();
-
         for (Parameter parameter : form.getParameters()) {
             switch (parameter) {
                 case TerminalParameter terminalParameter ->
@@ -89,8 +91,6 @@ public class TestPreviewController implements ControllerWithContext, Initializab
                         dependentParameters.add(new DependentParameterPreviewView(dependentParameter));
             }
         }
-
-        answerTextArea.setText(form.getAnswer());
     }
 
     /**
@@ -101,13 +101,12 @@ public class TestPreviewController implements ControllerWithContext, Initializab
         List<TerminalParameter> terminalParameters = getTerminalParametersOnForm();
         Map<String, BigDecimal> randomParametersValues = parameterRandomizer.randomizeTerminalParameters(
                 terminalParameters);
-
         getTerminalParameterPreviewViewStream().forEach(view ->
         {
             String parameterName = view.getParameterName();
             view.setValue(randomParametersValues.get(parameterName).toPlainString());
         });
-
+        hideError();
     }
 
     /**
@@ -120,15 +119,23 @@ public class TestPreviewController implements ControllerWithContext, Initializab
     @FXML
     public void onCalculateClick() {
         Map<String, BigDecimal> terminalParamsValues = collectTerminalParamsValuesOnForm();
-        TestTaskGenerationResult result = testTaskGenerator.generateTestTask(terminalParamsValues);
+        TestTaskGenerationResult result;
+        try {
+            result = testTaskGenerator.generateTestTask(terminalParamsValues);
+        } catch (Exception e) {
+            printError(e.getMessage());
+            return;
+        }
         TestTask task = result.getTestTask();
-        questionTextArea.setText(task.getQuestion());
+        questionView.setText(task.getQuestion());
         answerTextArea.setText(task.getAnswer());
         Map<String, BigDecimal> calculatedParameters = result.getParameters();
         getTerminalParameterPreviewViewStream().forEach(view ->
                 view.setValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
         getDependentParameterPreviewViewStream().forEach(
                 view -> view.setParameterValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
+        errorLabel.setVisible(false);
+        hideError();
     }
 
     /**
@@ -146,7 +153,7 @@ public class TestPreviewController implements ControllerWithContext, Initializab
                             randomizedValues.put(view.getParameterName(), new BigDecimal(parameterValue));
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        errorLabel.setText(e.getMessage());
                     }
                 }
         );
@@ -189,5 +196,15 @@ public class TestPreviewController implements ControllerWithContext, Initializab
 
     private AddQuestionForm getQuestionForm() {
         return testTaskGenerator.getForm();
+    }
+
+    private void printError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+    }
+
+    private void hideError() {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
     }
 }

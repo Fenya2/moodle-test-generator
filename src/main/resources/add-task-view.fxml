@@ -27,8 +27,7 @@
             </Label>
         </HBox>
 
-        <TextArea fx:id="questionField" promptText="Введите текст вопроса"
-                  prefRowCount="4" wrapText="true"/>
+        <TextArea fx:id="questionField" promptText="Введите текст вопроса" wrapText="true"/>
 
         <HBox spacing="5" alignment="CENTER_LEFT">
             <Label text="Параметры" styleClass="header-label"/>

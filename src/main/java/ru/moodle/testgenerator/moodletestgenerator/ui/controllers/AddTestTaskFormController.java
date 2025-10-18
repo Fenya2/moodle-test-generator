@@ -28,19 +28,19 @@ import java.util.ResourceBundle;
 
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.QuestionPreviewController.QUESTION_PREVIEW_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestPreviewController.QUESTION_PREVIEW_VIEW;
 
 /**
- * Контроллер формы добавления вопроса. Может быть запущен в контексте заполненной ранее формы
+ * Контроллер формы добавления задания. Может быть запущен в контексте заполненной ранее формы
  *
  * @author dsyromyatnikov
  * @since 12.10.2025
  */
-public class AddQuestionController implements ControllerWithContext, Initializable {
+public class AddTestTaskFormController implements ControllerWithContext, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String ADD_QUESTION_FORM_VIEW = "/add-question-view.fxml";
+    public static final String ADD_QUESTION_FORM_VIEW = "/add-task-view.fxml";
 
     private final NavigationService navigationService;
 
@@ -62,7 +62,7 @@ public class AddQuestionController implements ControllerWithContext, Initializab
     private TextField answerField;
 
     @Inject
-    public AddQuestionController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory) {
+    public AddTestTaskFormController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory) {
         this.navigationService = navigationService;
         this.testTaskGeneratorFactory = testTaskGeneratorFactory;
     }

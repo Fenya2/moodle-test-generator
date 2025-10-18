@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController"
+            fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController"
             fitToWidth="true" fitToHeight="true">
 
     <!-- Подключаем CSS -->

@@ -8,6 +8,8 @@ import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactory
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactoryImpl;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.JythonScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
+import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
+import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngineImpl;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationServiceImpl;
 
@@ -34,5 +36,6 @@ public class AppModule extends AbstractModule {
         bind(TestTaskGeneratorFactory.class).to(TestTaskGeneratorFactoryImpl.class);
         bind(ScriptCalculator.class).to(JythonScriptCalculator.class);
         bind(ParameterRandomizer.class).to(ParameterRandomizerImpl.class);
+        bind(TemplateEngine.class).to(TemplateEngineImpl.class);
     }
 }

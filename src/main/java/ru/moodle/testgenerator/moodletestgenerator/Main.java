@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import ru.moodle.testgenerator.moodletestgenerator.guice.AppModule;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationServiceImpl;
 
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddQuestionController.ADD_QUESTION_FORM_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_QUESTION_FORM_VIEW;
 
 public class Main extends Application {
     private static final String WINDOW_TITLE = "Moodle test generator";

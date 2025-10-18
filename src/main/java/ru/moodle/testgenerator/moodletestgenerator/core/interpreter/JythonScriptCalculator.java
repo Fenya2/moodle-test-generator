@@ -1,14 +1,13 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.interpreter;
 
+import com.google.inject.Singleton;
+import org.python.util.PythonInterpreter;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-
-import org.python.util.PythonInterpreter;
-
-import com.google.inject.Singleton;
 
 /**
  * Вычисляет зависимые параметры с использованием библиотеки jython
@@ -17,8 +16,7 @@ import com.google.inject.Singleton;
  * @since 11.10.2025
  */
 @Singleton
-public class JythonScriptCalculator implements ScriptCalculator
-{
+public class JythonScriptCalculator implements ScriptCalculator {
     /**
      * Скрипт, запускаемый сразу после старта интерпретатора
      */
@@ -45,44 +43,35 @@ public class JythonScriptCalculator implements ScriptCalculator
     private final PythonInterpreter interpreter;
     private final Lock lock;
 
-    public JythonScriptCalculator()
-    {
+    public JythonScriptCalculator() {
         this.lock = new ReentrantLock();
-        try
-        {
+        try {
             lock.lock();
             this.interpreter = new PythonInterpreter();
             interpreter.exec(IMPORTING);
-        }
-        finally
-        {
-            lock.unlock();
-        }
-    }
-
-    @Override
-    public BigDecimal calculateScript(String calculationScript, Map<String, BigDecimal> dependenciesValues)
-    {
-        String script = generateCalculationScript(calculationScript, dependenciesValues);
-        try
-        {
-            lock.lock();
-            interpreter.exec(script);
-            return new BigDecimal(interpreter.get(RESULT).asString());
-        }
-        finally
-        {
+        } finally {
             lock.unlock();
         }
     }
 
     private static String generateCalculationScript(String calculationScript,
-            Map<String, BigDecimal> dependenciesValues)
-    {
+                                                    Map<String, BigDecimal> dependenciesValues) {
         String functionParameters = dependenciesValues.entrySet().stream()
                 .map(entry -> "%s=Decimal('%s')".formatted(entry.getKey(), entry.getValue().toPlainString()))
                 .collect(Collectors.joining(","));
         String functionBody = FOUR_SPACES + calculationScript.replace("\n", "\n" + FOUR_SPACES);
         return EXECUTION_SCRIPT_TEMPLATE.formatted(functionParameters, functionBody);
+    }
+
+    @Override
+    public BigDecimal calculateScript(String calculationScript, Map<String, BigDecimal> dependenciesValues) {
+        String script = generateCalculationScript(calculationScript, dependenciesValues);
+        try {
+            lock.lock();
+            interpreter.exec(script);
+            return new BigDecimal(interpreter.get(RESULT).asString());
+        } finally {
+            lock.unlock();
+        }
     }
 }

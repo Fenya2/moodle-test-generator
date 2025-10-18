@@ -6,8 +6,7 @@ package ru.moodle.testgenerator.moodletestgenerator.core.parameters;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public enum ParameterType
-{
+public enum ParameterType {
     /**
      * Значение параметра не зависит от значений других параметров
      */

@@ -11,13 +11,11 @@ import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.DecimalField;
  * @author dsyromyatnikov
  * @since 17.10.2025
  */
-public final class TerminalParameterPreviewView extends AbstractParameterPreviewView
-{
+public final class TerminalParameterPreviewView extends AbstractParameterPreviewView {
 
     private final TextField valueField;
 
-    public TerminalParameterPreviewView(TerminalParameter parameter)
-    {
+    public TerminalParameterPreviewView(TerminalParameter parameter) {
         super(parameter.getName());
         this.valueField = new DecimalField();
         String promptText = "%s <= %s <= %s (step: %s)".formatted(
@@ -31,8 +29,7 @@ public final class TerminalParameterPreviewView extends AbstractParameterPreview
      *
      * @return строка с введённым значением
      */
-    public String getParameterValue()
-    {
+    public String getParameterValue() {
         return valueField.getText();
     }
 
@@ -41,8 +38,7 @@ public final class TerminalParameterPreviewView extends AbstractParameterPreview
      *
      * @param value новое значение
      */
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         valueField.setText(value);
     }
 }

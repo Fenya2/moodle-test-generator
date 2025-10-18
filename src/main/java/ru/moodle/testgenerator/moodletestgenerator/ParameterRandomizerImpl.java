@@ -1,5 +1,10 @@
 package ru.moodle.testgenerator.moodletestgenerator;
 
+import com.google.inject.Singleton;
+import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -7,36 +12,26 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.google.inject.Singleton;
-
-import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
-import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
-import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
-
 /**
  * @author dsyromyatnikov
  * @since 17.10.2025
  */
 @Singleton
-public class ParameterRandomizerImpl implements ParameterRandomizer
-{
+public class ParameterRandomizerImpl implements ParameterRandomizer {
     private final Random random;
 
-    public ParameterRandomizerImpl()
-    {
+    public ParameterRandomizerImpl() {
         this.random = new Random();
     }
 
     @Override
-    public Map<String, BigDecimal> randomizeTerminalParameters(List<TerminalParameter> parameters)
-    {
+    public Map<String, BigDecimal> randomizeTerminalParameters(List<TerminalParameter> parameters) {
         return parameters.stream()
                 .collect(Collectors.toMap(Parameter::getName, this::getRandomParameterValue));
     }
 
     @Override
-    public BigDecimal randomizeTerminalParameter(TerminalParameter terminalParameter)
-    {
+    public BigDecimal randomizeTerminalParameter(TerminalParameter terminalParameter) {
         return getRandomParameterValue(terminalParameter);
     }
 
@@ -44,8 +39,7 @@ public class ParameterRandomizerImpl implements ParameterRandomizer
      * @param parameter терминальный параметр
      * @return случайное возможное значение параметра (вероятность распределена равномерно по области определения)
      */
-    private BigDecimal getRandomParameterValue(TerminalParameter parameter)
-    {
+    private BigDecimal getRandomParameterValue(TerminalParameter parameter) {
         BigDecimal minValue = parameter.getMinValue();
         BigDecimal maxValue = parameter.getMaxValue();
         BigDecimal step = parameter.getStep();

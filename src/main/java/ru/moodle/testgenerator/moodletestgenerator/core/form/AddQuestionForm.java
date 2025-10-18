@@ -1,10 +1,10 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.form;
 
+import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 
 /**
  * Форма добавления вопроса
@@ -12,8 +12,7 @@ import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public class AddQuestionForm
-{
+public class AddQuestionForm {
     /**
      * Поле вопроса
      */
@@ -27,25 +26,21 @@ public class AddQuestionForm
      */
     private final String answer;
 
-    public AddQuestionForm(String question, List<Parameter> parameters, String answer)
-    {
+    public AddQuestionForm(String question, List<Parameter> parameters, String answer) {
         this.question = question;
         this.parameters = new ArrayList<>(parameters);
         this.answer = answer;
     }
 
-    public String getQuestion()
-    {
+    public String getQuestion() {
         return question;
     }
 
-    public List<Parameter> getParameters()
-    {
+    public List<Parameter> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
 
-    public String getAnswer()
-    {
+    public String getAnswer() {
         return answer;
     }
 }

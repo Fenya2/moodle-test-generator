@@ -11,12 +11,10 @@ import javafx.scene.layout.VBox;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public abstract sealed class AbstractParameterView extends VBox permits TerminalParameterView, DependentParameterView
-{
+public abstract sealed class AbstractParameterView extends VBox permits TerminalParameterView, DependentParameterView {
     private final TextField nameField;
 
-    protected AbstractParameterView()
-    {
+    protected AbstractParameterView() {
         HBox nameRow = new HBox();
         Label nameLabel = new Label("Имя:");
         this.nameField = new ParameterNameField();
@@ -28,16 +26,14 @@ public abstract sealed class AbstractParameterView extends VBox permits Terminal
     /**
      * @return имя параметра
      */
-    public String getName()
-    {
+    public String getName() {
         return this.nameField.getText();
     }
 
     /**
      * Устанавливает имя параметра
      */
-    public void setName(String parameterName)
-    {
+    public void setName(String parameterName) {
         this.nameField.setText(parameterName);
     }
 }

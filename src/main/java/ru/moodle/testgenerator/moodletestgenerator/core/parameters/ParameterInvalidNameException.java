@@ -6,10 +6,8 @@ package ru.moodle.testgenerator.moodletestgenerator.core.parameters;
  * @author dsyromyatnikov
  * @since 16.10.2025
  */
-public class ParameterInvalidNameException extends ParameterValidationException
-{
-    public ParameterInvalidNameException(String message)
-    {
+public class ParameterInvalidNameException extends ParameterValidationException {
+    public ParameterInvalidNameException(String message) {
         super(message);
     }
 }

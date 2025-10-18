@@ -11,14 +11,12 @@ import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.DecimalField;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public final class TerminalParameterView extends AbstractParameterView
-{
+public final class TerminalParameterView extends AbstractParameterView {
     private final TextField minValueField;
     private final TextField maxValueField;
     private final TextField stepField;
 
-    public TerminalParameterView()
-    {
+    public TerminalParameterView() {
         HBox minRow = new HBox(5);
         Label minLabel = new Label("Минимальное значение:");
         minValueField = new DecimalField();
@@ -46,48 +44,42 @@ public final class TerminalParameterView extends AbstractParameterView
     /**
      * Возвращает максимальное значение параметра
      */
-    public String getMaxValue()
-    {
+    public String getMaxValue() {
         return maxValueField.getText();
-    }
-
-    /**
-     * Возвращает минимальное значение параметра
-     */
-    public String getMinValue()
-    {
-        return minValueField.getText();
-    }
-
-    /**
-     * Возвращает шаг параметра
-     */
-    public String getStep()
-    {
-        return stepField.getText();
     }
 
     /**
      * Устанавливает максимальное значение параметра
      */
-    public void setMaxValue(String maxValue)
-    {
+    public void setMaxValue(String maxValue) {
         maxValueField.setText(maxValue);
+    }
+
+    /**
+     * Возвращает минимальное значение параметра
+     */
+    public String getMinValue() {
+        return minValueField.getText();
     }
 
     /**
      * Устанавливает минимальное значение параметра
      */
-    public void setMinValue(String minValue)
-    {
+    public void setMinValue(String minValue) {
         minValueField.setText(minValue);
+    }
+
+    /**
+     * Возвращает шаг параметра
+     */
+    public String getStep() {
+        return stepField.getText();
     }
 
     /**
      * Устанавливает шаг параметра
      */
-    public void setStep(String step)
-    {
+    public void setStep(String step) {
         stepField.setText(step);
     }
 }

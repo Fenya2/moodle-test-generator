@@ -8,7 +8,6 @@ import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
  * @author dsyromyatnikov
  * @since 17.10.2025
  */
-public interface TestTaskGeneratorFactory
-{
+public interface TestTaskGeneratorFactory {
     TestTaskGenerator create(AddQuestionForm form);
 }

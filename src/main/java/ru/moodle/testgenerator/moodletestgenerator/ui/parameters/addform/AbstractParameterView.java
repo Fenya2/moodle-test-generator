@@ -19,7 +19,7 @@ public abstract sealed class AbstractParameterView extends VBox permits Terminal
     {
         HBox nameRow = new HBox();
         Label nameLabel = new Label("Имя:");
-        this.nameField = new TextField();
+        this.nameField = new ParameterNameField();
         this.nameField.setPromptText("param1");
         nameRow.getChildren().addAll(nameLabel, nameField);
         getChildren().add(nameRow);

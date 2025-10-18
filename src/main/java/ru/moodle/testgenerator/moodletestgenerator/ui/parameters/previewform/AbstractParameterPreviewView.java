@@ -20,7 +20,7 @@ public abstract sealed class AbstractParameterPreviewView extends HBox
     {
         super(10);
         this.parameterName = new Label(parameterName);
-        this.getChildren().addAll(this.parameterName);
+        this.getChildren().addAll(this.parameterName, new Label(":"));
     }
 
     /**

@@ -1,9 +1,9 @@
-package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
+package ru.moodle.testgenerator.moodletestgenerator.ui.addform;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.DecimalField;
+import ru.moodle.testgenerator.moodletestgenerator.ui.DecimalField;
 
 /**
  * Параметр, значение которого не зависит от других параметров

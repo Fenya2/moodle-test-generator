@@ -1,4 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
+package ru.moodle.testgenerator.moodletestgenerator.ui.addform;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

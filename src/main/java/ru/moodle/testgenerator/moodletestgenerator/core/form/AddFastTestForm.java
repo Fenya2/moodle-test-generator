@@ -12,7 +12,7 @@ import java.util.List;
  * @author dsyromyatnikov
  * @since 03.10.2025
  */
-public class AddQuestionForm {
+public class AddFastTestForm {
     /**
      * Поле вопроса
      */
@@ -26,7 +26,7 @@ public class AddQuestionForm {
      */
     private final String answer;
 
-    public AddQuestionForm(String question, List<Parameter> parameters, String answer) {
+    public AddFastTestForm(String question, List<Parameter> parameters, String answer) {
         this.question = question;
         this.parameters = new ArrayList<>(parameters);
         this.answer = answer;

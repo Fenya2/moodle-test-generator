@@ -1,6 +1,6 @@
 package ru.moodle.testgenerator.moodletestgenerator.core;
 
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 
 /**
  * Фабрика {@link TestTaskGenerator}
@@ -9,5 +9,5 @@ import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
  * @since 17.10.2025
  */
 public interface TestTaskGeneratorFactory {
-    TestTaskGenerator create(AddQuestionForm form);
+    TestTaskGenerator create(AddFastTestForm form);
 }

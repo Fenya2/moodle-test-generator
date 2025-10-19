@@ -2,7 +2,7 @@ package ru.moodle.testgenerator.moodletestgenerator.core;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
 
@@ -24,7 +24,7 @@ public class TestTaskGeneratorFactoryImpl implements TestTaskGeneratorFactory {
     }
 
     @Override
-    public TestTaskGenerator create(AddQuestionForm form) {
+    public TestTaskGenerator create(AddFastTestForm form) {
         return new TestTaskGenerator(form, scriptCalculator, templateEngine);
     }
 }

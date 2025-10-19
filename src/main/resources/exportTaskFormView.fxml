@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ru.moodle.testgenerator.moodletestgenerator.ui.PositiveIntegerField?>
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ExportTaskFormController"
+      spacing="16" alignment="TOP_CENTER" prefWidth="600" prefHeight="400"
+      styleClass="export-form">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="errorLabel"
+           wrapText="true"
+           style="-fx-text-fill: black; -fx-background-color: red; -fx-padding: 10;"
+           visible="false"/>
+
+    <Label text="Экспорт сформированного задания"
+           styleClass="form-title"/>
+
+    <GridPane hgap="12" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="35"/>
+            <ColumnConstraints percentWidth="65"/>
+        </columnConstraints>
+
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20"/>
+        </padding>
+
+        <Label text="Количество тестов*:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <PositiveIntegerField fx:id="testCountField"
+                              promptText="Например: 10"
+                              GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Путь к папке:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <TextField fx:id="directoryPathField"
+                       promptText="Выберите папку для экспорта"
+                       HBox.hgrow="ALWAYS"/>
+            <Button text="..." onAction="#onClickChooseDirectory"/>
+        </HBox>
+
+        <Label text="Имя файла:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="fileNameField"
+                   promptText="Без расширения"
+                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+    <Region VBox.vgrow="ALWAYS"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Вернуться" onAction="#onBackClick"/>
+        <Button text="Экспортировать" onAction="#onExportClick"/>
+    </HBox>
+
+</VBox>

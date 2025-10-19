@@ -1,4 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform;
+package ru.moodle.testgenerator.moodletestgenerator.ui.previewform;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;

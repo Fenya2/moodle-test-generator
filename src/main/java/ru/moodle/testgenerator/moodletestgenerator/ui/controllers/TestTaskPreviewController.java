@@ -7,18 +7,18 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import ru.moodle.testgenerator.moodletestgenerator.TestTaskGenerationResult;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.DependentParameterPreviewView;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.QuestionAreaPreviewView;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.TerminalParameterPreviewView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.previewform.DependentParameterPreviewView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.previewform.QuestionAreaPreviewView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.previewform.TerminalParameterPreviewView;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -27,7 +27,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_QUESTION_FORM_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_TASK_FORM_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ExportTaskFormController.EXPORT_TASK_VIEW_FORM_VIEW;
 
 /**
  * Контроллер формы предпросмотра составленного вопроса. Подразумевается, что пользователь уже описал вопрос и по
@@ -36,11 +37,11 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTest
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class TestTaskPreviewController implements ControllerWithContext, Initializable {
+public class TestTaskPreviewController implements ControllerWithContext<TestTaskGenerator>, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String QUESTION_PREVIEW_VIEW = "/add-task-preview-view.fxml";
+    public static final String ADD_TASK_PREVIEW_FORM_VIEW = "/addTaskPreviewFormView.fxml";
 
     private final NavigationService navigationService;
     private final ParameterRandomizer parameterRandomizer;
@@ -70,8 +71,8 @@ public class TestTaskPreviewController implements ControllerWithContext, Initial
     }
 
     @Override
-    public void setContext(Object context) {
-        this.testTaskGenerator = (TestTaskGenerator) context;
+    public void setContext(TestTaskGenerator context) {
+        this.testTaskGenerator = context;
     }
 
     /**
@@ -80,7 +81,7 @@ public class TestTaskPreviewController implements ControllerWithContext, Initial
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        AddQuestionForm form = getQuestionForm();
+        AddFastTestForm form = getQuestionForm();
         List<Node> terminalParameters = terminalParamsContainer.getChildren();
         List<Node> dependentParameters = dependentParamsContainer.getChildren();
         for (Parameter parameter : form.getParameters()) {
@@ -183,18 +184,19 @@ public class TestTaskPreviewController implements ControllerWithContext, Initial
      * Обрабатывает событие нажатия на кнопку "Продолжить"
      */
     @FXML
-    public void onContinueClick() {
-        System.out.println("Кликнули на продолжить");
+    private void onContinueClick() {
+        navigationService.navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, testTaskGenerator);
     }
 
     /**
      * Обрабатывает событие нажатия на кнопку "Вернуться"
      */
-    public void onBackClick() {
-        navigationService.navigateTo(ADD_QUESTION_FORM_VIEW, testTaskGenerator.getForm());
+    @FXML
+    private void onBackClick() {
+        navigationService.navigateTo(ADD_TASK_FORM_VIEW, testTaskGenerator.getForm());
     }
 
-    private AddQuestionForm getQuestionForm() {
+    private AddFastTestForm getQuestionForm() {
         return testTaskGenerator.getForm();
     }
 

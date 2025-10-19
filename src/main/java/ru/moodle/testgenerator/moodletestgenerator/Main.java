@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import ru.moodle.testgenerator.moodletestgenerator.guice.AppModule;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationServiceImpl;
 
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_QUESTION_FORM_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_TASK_FORM_VIEW;
 
 public class Main extends Application {
     private static final String WINDOW_TITLE = "Moodle test generator";
@@ -16,7 +16,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Injector injector = Guice.createInjector(new AppModule(primaryStage));
         NavigationServiceImpl navigationServiceImpl = injector.getInstance(NavigationServiceImpl.class);
-        navigationServiceImpl.navigateTo(ADD_QUESTION_FORM_VIEW);
+        navigationServiceImpl.navigateTo(ADD_TASK_FORM_VIEW);
         primaryStage.setTitle(WINDOW_TITLE);
         primaryStage.show();
     }

@@ -2,10 +2,12 @@ package ru.moodle.testgenerator.moodletestgenerator.guice;
 
 import com.google.inject.AbstractModule;
 import javafx.stage.Stage;
-import ru.moodle.testgenerator.moodletestgenerator.ParameterRandomizerImpl;
+import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizerImpl;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactory;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactoryImpl;
+import ru.moodle.testgenerator.moodletestgenerator.core.export.ExportingService;
+import ru.moodle.testgenerator.moodletestgenerator.core.export.GiftExporter;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.JythonScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
@@ -37,5 +39,6 @@ public class AppModule extends AbstractModule {
         bind(ScriptCalculator.class).to(JythonScriptCalculator.class);
         bind(ParameterRandomizer.class).to(ParameterRandomizerImpl.class);
         bind(TemplateEngine.class).to(TemplateEngineImpl.class);
+        bind(ExportingService.class).to(GiftExporter.class);
     }
 }

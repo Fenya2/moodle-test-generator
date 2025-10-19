@@ -1,6 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator;
-
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
+package ru.moodle.testgenerator.moodletestgenerator.core;
 
 import java.math.BigDecimal;
 import java.util.Collections;

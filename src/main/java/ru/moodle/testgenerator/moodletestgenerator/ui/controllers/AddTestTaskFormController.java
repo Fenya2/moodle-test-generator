@@ -10,15 +10,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactory;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.DependentParameterView;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.ParameterContainerView;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.ParameterRemovedEvent;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform.TerminalParameterView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.addform.DependentParameterView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.addform.ParameterContainerView;
+import ru.moodle.testgenerator.moodletestgenerator.ui.addform.ParameterRemovedEvent;
+import ru.moodle.testgenerator.moodletestgenerator.ui.addform.TerminalParameterView;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.DEPENDENT;
 import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.ParameterType.TERMINAL;
-import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTaskPreviewController.QUESTION_PREVIEW_VIEW;
+import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTaskPreviewController.ADD_TASK_PREVIEW_FORM_VIEW;
 
 /**
  * Контроллер формы добавления задания. Может быть запущен в контексте заполненной ранее формы
@@ -36,11 +36,11 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  * @author dsyromyatnikov
  * @since 12.10.2025
  */
-public class AddTestTaskFormController implements ControllerWithContext, Initializable {
+public class AddTestTaskFormController implements ControllerWithContext<AddFastTestForm>, Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String ADD_QUESTION_FORM_VIEW = "/add-task-view.fxml";
+    public static final String ADD_TASK_FORM_VIEW = "/addTaskFormView.fxml";
 
     private final NavigationService navigationService;
 
@@ -51,7 +51,7 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
      * Форма, которую ранее заполнял пользователь
      */
     @Nullable
-    private AddQuestionForm addForm;
+    private AddFastTestForm addForm;
     @FXML
     private TextArea questionField;
 
@@ -68,8 +68,8 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
     }
 
     @Override
-    public void setContext(Object context) {
-        this.addForm = (AddQuestionForm) context;
+    public void setContext(AddFastTestForm context) {
+        this.addForm = context;
     }
 
     /**
@@ -152,7 +152,7 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
     @FXML
     private void onSubmitButton() {
         try {
-            navigationService.navigateTo(QUESTION_PREVIEW_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
+            navigationService.navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
         } catch (Exception e) {
             errorLabel.setText(e.getMessage());
             errorLabel.setVisible(true);
@@ -162,7 +162,7 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
     /**
      * Собирает данные с формы и формирует объект формы
      */
-    private AddQuestionForm collectDataOnForm() {
+    private AddFastTestForm collectDataOnForm() {
         String question = questionField.getText();
         List<Parameter> parameters = getParameterViews().stream().map(ParameterContainerView.class::cast)
                 .map(ParameterContainerView::getFilledParameter)
@@ -189,7 +189,7 @@ public class AddTestTaskFormController implements ControllerWithContext, Initial
                     }
                 }).toList();
         String answer = answerField.getText();
-        return new AddQuestionForm(question, parameters, answer);
+        return new AddFastTestForm(question, parameters, answer);
     }
 
     /**

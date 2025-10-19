@@ -1,7 +1,6 @@
-package ru.moodle.testgenerator.moodletestgenerator;
+package ru.moodle.testgenerator.moodletestgenerator.core;
 
 import com.google.inject.Singleton;
-import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 

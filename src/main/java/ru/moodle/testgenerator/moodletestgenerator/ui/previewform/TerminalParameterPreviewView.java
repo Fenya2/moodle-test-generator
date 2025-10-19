@@ -1,8 +1,8 @@
-package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform;
+package ru.moodle.testgenerator.moodletestgenerator.ui.previewform;
 
 import javafx.scene.control.TextField;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
-import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.DecimalField;
+import ru.moodle.testgenerator.moodletestgenerator.ui.DecimalField;
 
 /**
  * Представление для предпросмотра и задания значений терминальным параметрам.

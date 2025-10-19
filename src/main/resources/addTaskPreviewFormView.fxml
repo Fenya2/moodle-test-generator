@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import ru.moodle.testgenerator.moodletestgenerator.ui.parameters.previewform.QuestionAreaPreviewView?>
+<?import ru.moodle.testgenerator.moodletestgenerator.ui.previewform.QuestionAreaPreviewView?>
 <?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/11.0.1"

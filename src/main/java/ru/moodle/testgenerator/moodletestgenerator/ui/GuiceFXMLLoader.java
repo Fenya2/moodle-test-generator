@@ -3,8 +3,8 @@ package ru.moodle.testgenerator.moodletestgenerator.ui;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import jakarta.annotation.Nullable;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ControllerWithContext;
 
 import java.io.IOException;
@@ -30,15 +30,16 @@ public class GuiceFXMLLoader {
     /**
      * @param fxmlUrl путь к представлению
      * @param context контекст, необходимый контроллеру для обслуживания загружаемого представления
-     * @param <T>     тип представления
+     * @param <T>     тип контекста, необходимый контроллеру, связанному с представлением
      * @return представление, к которому привязан подготовленный контроллер, его обслуживающий
      */
-    public <T> T load(URL fxmlUrl, @Nullable Object context) throws IOException {
+    public <T> Parent load(URL fxmlUrl, T context) throws IOException {
         FXMLLoader loader = new FXMLLoader(fxmlUrl);
-        loader.setControllerFactory(clazz ->
-        {
+        loader.setControllerFactory(clazz -> {
             Object controller = injector.getInstance(clazz);
-            if (controller instanceof ControllerWithContext controllerWithContext) {
+            if (controller instanceof ControllerWithContext<?> cwc) {
+                @SuppressWarnings("unchecked")
+                ControllerWithContext<T> controllerWithContext = (ControllerWithContext<T>) cwc;
                 controllerWithContext.setContext(context);
             }
             return controller;

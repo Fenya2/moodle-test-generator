@@ -1,4 +1,4 @@
-package ru.moodle.testgenerator.moodletestgenerator.ui.parameters.addform;
+package ru.moodle.testgenerator.moodletestgenerator.ui.addform;
 
 import jakarta.annotation.Nullable;
 import javafx.scene.Node;

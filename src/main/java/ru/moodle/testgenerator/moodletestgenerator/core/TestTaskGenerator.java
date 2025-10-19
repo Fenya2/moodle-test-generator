@@ -1,9 +1,7 @@
 package ru.moodle.testgenerator.moodletestgenerator.core;
 
-import com.google.inject.Inject;
 import jakarta.annotation.Nullable;
-import ru.moodle.testgenerator.moodletestgenerator.TestTaskGenerationResult;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddQuestionForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.*;
 import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Генератор вариантов, на основе заполненой {@link AddQuestionForm формы}
+ * Генератор заданий с единственным (быстрым) вариантом ответа, на основе заполненной {@link AddFastTestForm формы}
  *
  * @author dsyromyatnikov
  * @since 05.10.2025
@@ -25,7 +23,7 @@ public class TestTaskGenerator {
     /**
      * Форма, по которой построен генератор
      */
-    private final AddQuestionForm form;
+    private final AddFastTestForm form;
     /**
      * Граф зависимостей параметров
      */
@@ -37,13 +35,23 @@ public class TestTaskGenerator {
      */
     private Map<String, Parameter> parameterDefinitions;
 
-    public TestTaskGenerator(AddQuestionForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
+    public TestTaskGenerator(AddFastTestForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
         this.form = form;
         this.scriptCalculator = scriptCalculator;
         this.templateEngine = templateEngine;
         this.parametersDependencyGraph = new HashMap<>();
         validateAndPrepare(form);
     }
+
+    public AddFastTestForm getForm() {
+        return form;
+    }
+
+    public List<TerminalParameter> getTerminalParameters()
+    {
+        return getTerminalParametersStream().toList();
+    }
+
 
     /**
      * Определяет, принадлежит ли заданное значение терминального параметра его области определения
@@ -90,7 +98,7 @@ public class TestTaskGenerator {
      * @implNote в таком графе вершины со степенью исхода 0 соответствуют {@link TerminalParameter терминальным
      * параметрам}. Такой граф не обязательно связный
      */
-    private void validateAndPrepare(AddQuestionForm form) {
+    private void validateAndPrepare(AddFastTestForm form) {
         List<Parameter> parameters = form.getParameters();
         try {
             parameterDefinitions = parameters.stream()
@@ -154,7 +162,7 @@ public class TestTaskGenerator {
      */
     private void checkTerminalParametersStepsIsPositive() {
         getTerminalParametersStream()
-                .filter(param -> param.getStep().compareTo(BigDecimal.ZERO) < 0)
+                .filter(param -> param.getStep().compareTo(BigDecimal.ZERO) <= 0)
                 .findAny().ifPresent(emptyDefAreaParam ->
                 {
                     throw new NonPositiveTerminalParameterStepException(
@@ -243,10 +251,6 @@ public class TestTaskGenerator {
                     "На форме есть связанный параметр, который невозможно вычислить, так как цепочка зависимостей "
                             + "этого параметра не ведет к терминальному параметру");
         }
-    }
-
-    public AddQuestionForm getForm() {
-        return form;
     }
 
     /**

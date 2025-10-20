@@ -3,6 +3,7 @@ package ru.moodle.testgenerator.moodletestgenerator.ui;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import jakarta.annotation.Nullable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ControllerWithContext;
@@ -33,7 +34,7 @@ public class GuiceFXMLLoader {
      * @param <T>     тип контекста, необходимый контроллеру, связанному с представлением
      * @return представление, к которому привязан подготовленный контроллер, его обслуживающий
      */
-    public <T> Parent load(URL fxmlUrl, T context) throws IOException {
+    public <T> Parent load(URL fxmlUrl, @Nullable T context) throws IOException {
         FXMLLoader loader = new FXMLLoader(fxmlUrl);
         loader.setControllerFactory(clazz -> {
             Object controller = injector.getInstance(clazz);

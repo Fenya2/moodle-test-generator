@@ -33,7 +33,7 @@ public class NavigationServiceImpl implements NavigationService {
     /**
      * Переключает сцену на представление с расположением {@code fxmlPath}
      *
-     * @param fxmlPath расположение представления для отображения сцены (полный путь)
+     * @param fxmlPath расположение представления для отображения сцены (полный путь относительно classPath)
      * @param context  контекст, необходимый следующему контроллеру для работы
      */
     public void navigateTo(String fxmlPath, @Nullable Object context) {

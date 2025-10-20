@@ -4,12 +4,11 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
@@ -37,17 +36,14 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ExportT
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class TestTaskPreviewController implements ControllerWithContext<TestTaskGenerator>, Initializable {
+public class TestTaskPreviewController extends AbstractControllerWithContext<TestTaskGenerator> implements Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
     public static final String ADD_TASK_PREVIEW_FORM_VIEW = "/addTaskPreviewFormView.fxml";
 
-    private final NavigationService navigationService;
     private final ParameterRandomizer parameterRandomizer;
 
-    @FXML
-    private Label errorLabel;
     /**
      * Представление с записанным вопросом задания
      */
@@ -66,7 +62,7 @@ public class TestTaskPreviewController implements ControllerWithContext<TestTask
 
     @Inject
     public TestTaskPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
-        this.navigationService = navigationService;
+        super(navigationService);
         this.parameterRandomizer = parameterRandomizer;
     }
 
@@ -135,7 +131,6 @@ public class TestTaskPreviewController implements ControllerWithContext<TestTask
                 view.setValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
         getDependentParameterPreviewViewStream().forEach(
                 view -> view.setParameterValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
-        errorLabel.setVisible(false);
         hideError();
     }
 
@@ -154,7 +149,7 @@ public class TestTaskPreviewController implements ControllerWithContext<TestTask
                             randomizedValues.put(view.getParameterName(), new BigDecimal(parameterValue));
                         }
                     } catch (Exception e) {
-                        errorLabel.setText(e.getMessage());
+                        printError(e.getMessage());
                     }
                 }
         );
@@ -185,7 +180,7 @@ public class TestTaskPreviewController implements ControllerWithContext<TestTask
      */
     @FXML
     private void onContinueClick() {
-        navigationService.navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, testTaskGenerator);
+        navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, testTaskGenerator);
     }
 
     /**
@@ -193,20 +188,10 @@ public class TestTaskPreviewController implements ControllerWithContext<TestTask
      */
     @FXML
     private void onBackClick() {
-        navigationService.navigateTo(ADD_TASK_FORM_VIEW, testTaskGenerator.getForm());
+        navigateTo(ADD_TASK_FORM_VIEW, testTaskGenerator.getForm());
     }
 
     private AddFastTestForm getQuestionForm() {
         return testTaskGenerator.getForm();
-    }
-
-    private void printError(String message) {
-        errorLabel.setText(message);
-        errorLabel.setVisible(true);
-    }
-
-    private void hideError() {
-        errorLabel.setText("");
-        errorLabel.setVisible(false);
     }
 }

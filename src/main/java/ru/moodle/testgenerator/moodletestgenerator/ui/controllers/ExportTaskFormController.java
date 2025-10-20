@@ -27,11 +27,10 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  * @author dsyromyatnikov
  * @since 19.10.2025
  */
-public class ExportTaskFormController implements ControllerWithContext<TestTaskGenerator> {
+public class ExportTaskFormController extends AbstractControllerWithContext<TestTaskGenerator> {
 
     public static final String EXPORT_TASK_VIEW_FORM_VIEW = "/exportTaskFormView.fxml";
 
-    private final NavigationService navigationService;
     private final ExportingService exportingService;
     private final ParameterRandomizer parameterRandomizer;
 
@@ -51,7 +50,7 @@ public class ExportTaskFormController implements ControllerWithContext<TestTaskG
 
     @Inject
     public ExportTaskFormController(NavigationService navigationService, ExportingService exportingService, ParameterRandomizer parameterRandomizer) {
-        this.navigationService = navigationService;
+        super(navigationService);
         this.exportingService = exportingService;
         this.parameterRandomizer = parameterRandomizer;
     }
@@ -66,7 +65,7 @@ public class ExportTaskFormController implements ControllerWithContext<TestTaskG
      */
     @FXML
     private void onBackClick() {
-        navigationService.navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGenerator);
+        navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGenerator);
     }
 
     /**
@@ -124,15 +123,5 @@ public class ExportTaskFormController implements ControllerWithContext<TestTaskG
         alert.setHeaderText("Экспорт заданий завершен");
         alert.initOwner(directoryPathField.getScene().getWindow());
         alert.showAndWait();
-    }
-
-    private void printError(String message) {
-        errorLabel.setText(message);
-        errorLabel.setVisible(true);
-    }
-
-    private void hideError() {
-        errorLabel.setText("");
-        errorLabel.setVisible(false);
     }
 }

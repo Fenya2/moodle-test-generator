@@ -5,7 +5,6 @@ import jakarta.annotation.Nullable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -36,17 +35,14 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  * @author dsyromyatnikov
  * @since 12.10.2025
  */
-public class AddTestTaskFormController implements ControllerWithContext<AddFastTestForm>, Initializable {
+public class AddTestTaskFormController extends AbstractControllerWithContext<AddFastTestForm> implements Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
     public static final String ADD_TASK_FORM_VIEW = "/addTaskFormView.fxml";
 
-    private final NavigationService navigationService;
-
     private final TestTaskGeneratorFactory testTaskGeneratorFactory;
-    @FXML
-    private Label errorLabel;
+
     /**
      * Форма, которую ранее заполнял пользователь
      */
@@ -63,6 +59,7 @@ public class AddTestTaskFormController implements ControllerWithContext<AddFastT
 
     @Inject
     public AddTestTaskFormController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory) {
+        super(navigationService);
         this.navigationService = navigationService;
         this.testTaskGeneratorFactory = testTaskGeneratorFactory;
     }
@@ -152,10 +149,9 @@ public class AddTestTaskFormController implements ControllerWithContext<AddFastT
     @FXML
     private void onSubmitButton() {
         try {
-            navigationService.navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
+            navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGeneratorFactory.create(collectDataOnForm()));
         } catch (Exception e) {
-            errorLabel.setText(e.getMessage());
-            errorLabel.setVisible(true);
+            printError(e.getMessage());
         }
     }
 
@@ -168,28 +164,32 @@ public class AddTestTaskFormController implements ControllerWithContext<AddFastT
                 .map(ParameterContainerView::getFilledParameter)
                 .filter(Objects::nonNull)
                 .map(filledParameter -> switch (filledParameter) {
-                    case TerminalParameterView terminalParamView -> {
-                        TerminalParameter terminalParam = new TerminalParameter(terminalParamView.getName());
-                        try {
-                            terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
-                            terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
-                            terminalParam.setStep(new BigDecimal(terminalParamView.getStep()));
-                        } catch (NumberFormatException _) {
-                            throw new InvalidNumberFormatException(
-                                    "Неверно заданы допустимые значения параметра %s".formatted(
-                                            terminalParam.getName()));
-                        }
-                        yield terminalParam;
-                    }
-                    case DependentParameterView dependentParamView -> {
-                        DependentParameter dependentParameter = new DependentParameter(dependentParamView.getName());
-                        dependentParameter.setDependentParameters(dependentParamView.getDependencies());
-                        dependentParameter.setEvaluationScript(dependentParamView.getEvaluationScript());
-                        yield dependentParameter;
-                    }
+                    case TerminalParameterView terminalParamView -> createTerminalParameter(terminalParamView);
+                    case DependentParameterView dependentParamView -> createDependentParameter(dependentParamView);
                 }).toList();
         String answer = answerField.getText();
         return new AddFastTestForm(question, parameters, answer);
+    }
+
+    private static TerminalParameter createTerminalParameter(TerminalParameterView terminalParamView) {
+        TerminalParameter terminalParam = new TerminalParameter(terminalParamView.getName());
+        try {
+            terminalParam.setMaxValue(new BigDecimal(terminalParamView.getMaxValue()));
+            terminalParam.setMinValue(new BigDecimal(terminalParamView.getMinValue()));
+            terminalParam.setStep(new BigDecimal(terminalParamView.getStep()));
+        } catch (NumberFormatException _) {
+            throw new InvalidNumberFormatException(
+                    "Неверно заданы допустимые значения параметра %s".formatted(
+                            terminalParam.getName()));
+        }
+        return terminalParam;
+    }
+
+    private static DependentParameter createDependentParameter(DependentParameterView dependentParamView) {
+        DependentParameter dependentParameter = new DependentParameter(dependentParamView.getName());
+        dependentParameter.setDependentParameters(dependentParamView.getDependencies());
+        dependentParameter.setEvaluationScript(dependentParamView.getEvaluationScript());
+        return dependentParameter;
     }
 
     /**

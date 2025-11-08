@@ -1,6 +1,6 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.export;
 
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -16,5 +16,5 @@ public interface ExportingService {
      * @param tasks    список вопросов
      * @param path     путь к файлу
      */
-    void exportToGift(List<TestTask> tasks, Path path);
+    void exportToGift(List<NumericTestTask> tasks, Path path);
 }

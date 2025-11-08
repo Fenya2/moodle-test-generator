@@ -6,11 +6,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
@@ -31,12 +31,12 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ExportT
 
 /**
  * Контроллер формы предпросмотра составленного вопроса. Подразумевается, что пользователь уже описал вопрос и по
- * вопросу сгенерировался генератор {@link TestTaskGenerator}. То есть контроллер начинает работу с контекстом
+ * вопросу сгенерировался генератор {@link NumericTestTaskGenerator}. То есть контроллер начинает работу с контекстом
  *
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class TestTaskPreviewController extends AbstractControllerWithContext<TestTaskGenerator> implements Initializable {
+public class TestTaskPreviewController extends AbstractControllerWithContext<NumericTestTaskGenerator> implements Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
@@ -58,7 +58,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
      */
     @FXML
     public TextArea answerTextArea;
-    private TestTaskGenerator testTaskGenerator;
+    private NumericTestTaskGenerator numericTestTaskGenerator;
 
     @Inject
     public TestTaskPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
@@ -67,8 +67,8 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
     }
 
     @Override
-    public void setContext(TestTaskGenerator context) {
-        this.testTaskGenerator = context;
+    public void setContext(NumericTestTaskGenerator context) {
+        this.numericTestTaskGenerator = context;
     }
 
     /**
@@ -77,10 +77,10 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        AddFastTestForm form = getQuestionForm();
+        AddFastNumericTestForm form = getQuestionForm();
         List<Node> terminalParameters = terminalParamsContainer.getChildren();
         List<Node> dependentParameters = dependentParamsContainer.getChildren();
-        for (Parameter parameter : form.getParameters()) {
+        for (Parameter parameter : form.parameters()) {
             switch (parameter) {
                 case TerminalParameter terminalParameter ->
                         terminalParameters.add(new TerminalParameterPreviewView(terminalParameter));
@@ -118,14 +118,14 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
         Map<String, BigDecimal> terminalParamsValues = collectTerminalParamsValuesOnForm();
         TestTaskGenerationResult result;
         try {
-            result = testTaskGenerator.generateTestTask(terminalParamsValues);
+            result = numericTestTaskGenerator.generateTestTask(terminalParamsValues);
         } catch (Exception e) {
             printError(e.getMessage());
             return;
         }
-        TestTask task = result.getTestTask();
+        NumericTestTask task = result.getTestTask();
         questionView.setText(task.getQuestion());
-        answerTextArea.setText(task.getAnswer());
+        answerTextArea.setText(task.getAnswer() + "±" + getQuestionForm().answerError());
         Map<String, BigDecimal> calculatedParameters = result.getParameters();
         getTerminalParameterPreviewViewStream().forEach(view ->
                 view.setValue(calculatedParameters.get(view.getParameterName()).toPlainString()));
@@ -170,7 +170,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
     }
 
     private List<TerminalParameter> getTerminalParametersOnForm() {
-        return getQuestionForm().getParameters().stream()
+        return getQuestionForm().parameters().stream()
                 .filter(TerminalParameter.class::isInstance)
                 .map(TerminalParameter.class::cast).toList();
     }
@@ -180,7 +180,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
      */
     @FXML
     private void onContinueClick() {
-        navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, testTaskGenerator);
+        navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, numericTestTaskGenerator);
     }
 
     /**
@@ -188,10 +188,10 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
      */
     @FXML
     private void onBackClick() {
-        navigateTo(ADD_TASK_FORM_VIEW, testTaskGenerator.getForm());
+        navigateTo(ADD_TASK_FORM_VIEW, numericTestTaskGenerator.getForm());
     }
 
-    private AddFastTestForm getQuestionForm() {
-        return testTaskGenerator.getForm();
+    private AddFastNumericTestForm getQuestionForm() {
+        return numericTestTaskGenerator.getForm();
     }
 }

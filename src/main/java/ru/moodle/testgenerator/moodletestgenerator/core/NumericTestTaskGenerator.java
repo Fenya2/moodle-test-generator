@@ -1,7 +1,7 @@
 package ru.moodle.testgenerator.moodletestgenerator.core;
 
 import jakarta.annotation.Nullable;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.interpreter.ScriptCalculator;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.*;
 import ru.moodle.testgenerator.moodletestgenerator.template.TemplateEngine;
@@ -10,20 +10,27 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Генератор заданий с единственным (быстрым) вариантом ответа, на основе заполненной {@link AddFastTestForm формы}
+ * Генератор заданий с единственным числовым вариантом ответа, на основе заполненной {@link AddFastNumericTestForm формы}
  *
  * @author dsyromyatnikov
  * @since 05.10.2025
  */
-public class TestTaskGenerator {
+public class NumericTestTaskGenerator {
+    /**
+     * Формат погрешности, которой должна соответствовать строка, описывающая погрешность ответа
+     *
+     * @apiNote положительное число с плавающей точкой
+     */
+    private static final Pattern ANSWER_ERROR_PATTERN = Pattern.compile("^\\d*(\\.\\d*)?$");
     /**
      * Форма, по которой построен генератор
      */
-    private final AddFastTestForm form;
+    private final AddFastNumericTestForm form;
     /**
      * Граф зависимостей параметров
      */
@@ -35,20 +42,43 @@ public class TestTaskGenerator {
      */
     private Map<String, Parameter> parameterDefinitions;
 
-    public TestTaskGenerator(AddFastTestForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
+    /**
+     * Погрешность ответа
+     */
+    private final String answerError;
+
+    public NumericTestTaskGenerator(AddFastNumericTestForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
         this.form = form;
         this.scriptCalculator = scriptCalculator;
         this.templateEngine = templateEngine;
         this.parametersDependencyGraph = new HashMap<>();
         validateAndPrepare(form);
+        String answerError = form.answerError();
+        validateErrorAnswer(answerError);
+        this.answerError = answerError;
     }
 
-    public AddFastTestForm getForm() {
+
+    /**
+     * Проверяет, что погрешность ответа указана в верном формате
+     *
+     * @param answerError погрешность ответа
+     */
+    private static void validateErrorAnswer(String answerError) {
+        if (!ANSWER_ERROR_PATTERN.matcher(answerError).matches()) {
+            throw new IllegalStateException(
+                    "Формат погрешности ответа '%s' не соответствует ожидаемому".formatted(answerError));
+        }
+        if (answerError.isEmpty()) {
+            throw new IllegalStateException("Погрешность ответа должна быть указана");
+        }
+    }
+
+    public AddFastNumericTestForm getForm() {
         return form;
     }
 
-    public List<TerminalParameter> getTerminalParameters()
-    {
+    public List<TerminalParameter> getTerminalParameters() {
         return getTerminalParametersStream().toList();
     }
 
@@ -98,8 +128,8 @@ public class TestTaskGenerator {
      * @implNote в таком графе вершины со степенью исхода 0 соответствуют {@link TerminalParameter терминальным
      * параметрам}. Такой граф не обязательно связный
      */
-    private void validateAndPrepare(AddFastTestForm form) {
-        List<Parameter> parameters = form.getParameters();
+    private void validateAndPrepare(AddFastNumericTestForm form) {
+        List<Parameter> parameters = form.parameters();
         try {
             parameterDefinitions = parameters.stream()
                     .collect(Collectors.toMap(Parameter::getName, Function.identity()));
@@ -263,10 +293,10 @@ public class TestTaskGenerator {
     public TestTaskGenerationResult generateTestTask(Map<String, BigDecimal> terminalParameterValues) {
         checkAllTerminalParametersDefinedCorrectly(terminalParameterValues);
         Map<String, BigDecimal> calculatedParameters = calculateParameters(terminalParameterValues);
-        String calculatedQuestion = templateEngine.render(getForm().getQuestion(), calculatedParameters);
-        String calculatedAnswer = templateEngine.render(getForm().getAnswer(), calculatedParameters);
-        TestTask testTask = new TestTask(calculatedQuestion, calculatedAnswer);
-        return new TestTaskGenerationResult(testTask, calculatedParameters);
+        String calculatedQuestion = templateEngine.render(getForm().question(), calculatedParameters);
+        String calculatedAnswer = templateEngine.render(getForm().answer(), calculatedParameters);
+        NumericTestTask numericTestTask = new NumericTestTask(calculatedQuestion, calculatedAnswer, answerError);
+        return new TestTaskGenerationResult(numericTestTask, calculatedParameters);
     }
 
     /**

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import ru.moodle.testgenerator.moodletestgenerator.ui.PositiveDecimalField?>
 <?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController"
@@ -27,7 +28,11 @@
             </Label>
         </HBox>
 
-        <TextArea fx:id="questionField" promptText="Введите текст вопроса" wrapText="true"/>
+        <TextArea fx:id="questionField"
+                  promptText="Введите текст вопроса"
+                  wrapText="true"
+                  minHeight="140"
+                  VBox.vgrow="ALWAYS"/>
 
         <HBox spacing="5" alignment="CENTER_LEFT">
             <Label text="Параметры" styleClass="header-label"/>
@@ -45,7 +50,10 @@
         <Button text="+" onAction="#onAddParameterClick"/>
 
         <Label text="Поле ответа" styleClass="header-label"/>
-        <TextField fx:id="answerField" promptText="Введите ответ"/>
+        <TextField fx:id="answerField" promptText="Введите ответ (часто параметр)"/>
+
+        <Label text="Погрешность ответа" styleClass="header-label"/>
+        <PositiveDecimalField fx:id="answerErrorField" promptText="0.05"/>
 
         <Label fx:id="errorLabel"
                wrapText="true"

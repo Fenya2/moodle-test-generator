@@ -1,6 +1,6 @@
 package ru.moodle.testgenerator.moodletestgenerator.core.export;
 
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,23 +10,31 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Экспортирует задания в GIFT формат
+ * Экспортирует задания в формате GIFT
  *
  * @author dsyromyatnikov
  * @since 19.10.2025
  */
 public class GiftExporter implements ExportingService {
     private static final Set<String> GIFT_SPECIAL_CHARACTERS = Set.of("~", "=", "#", "{", "}");
-    private static final String GIFT_FILE_EXTENSION = "gift";
-    private static final String GIFT_TEST_WITH_SINGLE_ANSWER_PATTERN = "%s{=%s}";
+    private static final String GIFT_FILE_EXTENSION = "txt";
+
+    private static final String GIFT_NUMERIC_ANSWER_PATTERN = "{=%s:%s}";
+    private static final String GIFT_TITLE_PATTERN = "::%s::";
 
     @Override
-    public void exportToGift(List<TestTask> tasks, Path path) {
+    public void exportToGift(List<NumericTestTask> tasks, Path path) {
         try (var writer = Files.newBufferedWriter(resolvePath(path), StandardCharsets.UTF_8)) {
-            for (TestTask task : tasks) {
-                String taskStr = GIFT_TEST_WITH_SINGLE_ANSWER_PATTERN.formatted(
-                        escapeSpecialCharacters(task.getQuestion()), task.getAnswer());
-                writer.write(taskStr);
+            for (NumericTestTask task : tasks) {
+                String taskName = task.getName();
+                if (taskName != null && !taskName.isEmpty()) {
+                    writer.write(GIFT_TITLE_PATTERN.formatted(taskName));
+                }
+                String question = escapeSpecialCharacters(task.getQuestion());
+                writer.write(question);
+                writer.newLine();
+                String answer = GIFT_NUMERIC_ANSWER_PATTERN.formatted(task.getAnswer(), task.getAnswerError());
+                writer.write(answer);
                 writer.newLine();
                 writer.newLine();
             }

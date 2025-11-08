@@ -2,7 +2,7 @@ package ru.moodle.testgenerator.moodletestgenerator.core.form;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.*;
 
 import java.math.BigDecimal;
@@ -13,11 +13,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Тесты для {@link TestTaskGenerator}
+ * Тесты для {@link NumericTestTaskGenerator}
  */
-class TestTaskGeneratorTest {
-    private static AddFastTestForm createQuestionForm(List<Parameter> parameters) {
-        return new AddFastTestForm("Вопрос?", parameters, "Ответ");
+class TestTaskGeneratorNumericNumericTest {
+    private static AddFastNumericTestForm createQuestionForm(List<Parameter> parameters) {
+        return new AddFastNumericTestForm("Вопрос?", parameters, "Ответ");
     }
 
     private static TerminalParameter createTerminalParam(String name) {
@@ -51,8 +51,8 @@ class TestTaskGeneratorTest {
                 createTerminalParam("b"),
                 createDependentParam("c", Set.of("a", "b")),
                 createDependentParam("d", Set.of("c")));
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertDoesNotThrow(() -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertDoesNotThrow(() -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
@@ -64,8 +64,8 @@ class TestTaskGeneratorTest {
                 createTerminalParam("a"),
                 createDependentParam("b", Set.of("a")),
                 createDependentParam("c", Set.of("b")));
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertDoesNotThrow(() -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertDoesNotThrow(() -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
@@ -76,8 +76,8 @@ class TestTaskGeneratorTest {
                 createTerminalParam("param2"),
                 createTerminalParam("param3"));
 
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertDoesNotThrow(() -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertDoesNotThrow(() -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
@@ -87,8 +87,8 @@ class TestTaskGeneratorTest {
                 createDependentParam("first", Set.of()),
                 createDependentParam("second", Set.of("first")),
                 createDependentParam("third", Set.of("second")));
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertThrows(UncomputableDependentParameterException.class, () -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertThrows(UncomputableDependentParameterException.class, () -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
@@ -97,9 +97,9 @@ class TestTaskGeneratorTest {
         List<Parameter> parameters = List.of(
                 createTerminalParam("duplicate"),
                 createDependentParam("duplicate", Set.of()));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         DuplicateParameterException exception =
-                assertThrows(DuplicateParameterException.class, () -> new TestTaskGenerator(form, null, null));
+                assertThrows(DuplicateParameterException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("На форме присутствуют параметры с одинаковым именем", exception.getMessage());
     }
 
@@ -111,8 +111,8 @@ class TestTaskGeneratorTest {
                 createTerminalParam("a"),
                 createDependentParam("b", Set.of()),
                 createDependentParam("b", Set.of("a")));
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertThrows(DuplicateParameterException.class, () -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertThrows(DuplicateParameterException.class, () -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
@@ -122,9 +122,9 @@ class TestTaskGeneratorTest {
                 createDependentParam("a", Set.of("c")),
                 createDependentParam("b", Set.of("a")),
                 createDependentParam("c", Set.of("b")));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception = assertThrows(
-                ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: a -> c -> b -> a", exception.getMessage());
     }
 
@@ -135,9 +135,9 @@ class TestTaskGeneratorTest {
                 createDependentParam("x", Set.of("y")),
                 createDependentParam("y", Set.of("x")));
 
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception =
-                assertThrows(ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                assertThrows(ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: x -> y -> x", exception.getMessage());
     }
 
@@ -145,9 +145,9 @@ class TestTaskGeneratorTest {
     @DisplayName("Выбрасывает исключение при взаимной зависимости")
     void shouldThrowParameterValidationException_WhenSelfCycle() {
         List<Parameter> parameters = List.of(createDependentParam("self", Set.of("self")));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception = assertThrows(
-                ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: self -> self", exception.getMessage());
     }
 
@@ -155,9 +155,9 @@ class TestTaskGeneratorTest {
     @DisplayName("Выбрасывает исключение, если область определения терминального параметра пуста")
     void shouldThrowParameterValidationException_whenTerminalParameterHaveEmptyDefinitionArea() {
         List<Parameter> parameters = List.of(createTerminalParam("term", 1, 0, 1));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception = assertThrows(
-                ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Минимальное значение параметра term больше максимального", exception.getMessage());
     }
 
@@ -165,9 +165,9 @@ class TestTaskGeneratorTest {
     @DisplayName("Выбрасывает исключение, если шаг терминального параметра отрицательный")
     void shouldThrowParameterValidationException_whenTerminalParameterStepIsNegative() {
         List<Parameter> parameters = List.of(createTerminalParam("term", 0, 1, -1));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         NonPositiveTerminalParameterStepException exception = assertThrows(
-                NonPositiveTerminalParameterStepException.class, () -> new TestTaskGenerator(form, null, null));
+                NonPositiveTerminalParameterStepException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Шаг параметра term не положительный", exception.getMessage());
     }
 
@@ -175,9 +175,9 @@ class TestTaskGeneratorTest {
     @DisplayName("Выбрасывает исключение, если шаг терминального параметра не положительный")
     void shouldThrowParameterValidationException_whenTerminalParameterStepIsZero() {
         List<Parameter> parameters = List.of(createTerminalParam("term", 0, 1, 0));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         NonPositiveTerminalParameterStepException exception = assertThrows(
-                NonPositiveTerminalParameterStepException.class, () -> new TestTaskGenerator(form, null, null));
+                NonPositiveTerminalParameterStepException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Шаг параметра term не положительный", exception.getMessage());
     }
 
@@ -186,9 +186,9 @@ class TestTaskGeneratorTest {
     @DisplayName("Выбрасывает исключение, если имя параметра - пустая строка")
     void shouldThrowParameterInvalidNameException_whenParameterNameIsEmpty() {
         List<Parameter> parameters = List.of(createTerminalParam("", 0, 1, -1));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterInvalidNameException exception = assertThrows(
-                ParameterInvalidNameException.class, () -> new TestTaskGenerator(form, null, null));
+                ParameterInvalidNameException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Задано недопустимое имя параметру ''", exception.getMessage());
     }
 
@@ -202,9 +202,9 @@ class TestTaskGeneratorTest {
                 createDependentParam("cycle2", Set.of("cycle1")),
                 createDependentParam("cycle3", Set.of("cycle2")));
 
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception = assertThrows(
-                ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: cycle3 -> cycle2 -> cycle1 -> cycle3",
                 exception.getMessage());
     }
@@ -219,10 +219,10 @@ class TestTaskGeneratorTest {
                 createDependentParam("node4", Set.of("node3")),
                 createDependentParam("node5", Set.of("node4")));
 
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterCyclicDependencyException exception = assertThrows(
                 ParameterCyclicDependencyException.class,
-                () -> new TestTaskGenerator(form, null, null));
+                () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: node4 -> node3 -> node2 -> node1 -> "
                 + "node5 -> node4", exception.getMessage());
     }
@@ -236,9 +236,9 @@ class TestTaskGeneratorTest {
                 createDependentParam("level2", Set.of("level1", "level3")),
                 createDependentParam("level3", Set.of("level2")),
                 createTerminalParam("independent"));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         ParameterValidationException exception =
-                assertThrows(ParameterValidationException.class, () -> new TestTaskGenerator(form, null, null));
+                assertThrows(ParameterValidationException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Обнаружена циклическая зависимость между параметрами: level3 -> level2 -> level3",
                 exception.getMessage());
     }
@@ -247,25 +247,25 @@ class TestTaskGeneratorTest {
     @DisplayName("Успешное создание с пустым списком параметров")
     void shouldCreateQuestionGenerator_WhenEmptyParameters() {
         List<Parameter> parameters = List.of();
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertDoesNotThrow(() -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertDoesNotThrow(() -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
     @DisplayName("Успешное создание с одним параметром")
     void shouldCreateQuestionGenerator_WhenSingleParameter() {
         List<Parameter> parameters = List.of(createTerminalParam("single"));
-        AddFastTestForm form = createQuestionForm(parameters);
-        assertDoesNotThrow(() -> new TestTaskGenerator(form, null, null));
+        AddFastNumericTestForm form = createQuestionForm(parameters);
+        assertDoesNotThrow(() -> new NumericTestTaskGenerator(form, null, null));
     }
 
     @Test
     @DisplayName("Бросает исключение, если в зависимостях присутствует неописанный параметр")
     void shouldThrowParameterValidationException_WhenDependencyOnNonExistentParameter() {
         List<Parameter> parameters = List.of(createDependentParam("valid", Set.of("undefined")));
-        AddFastTestForm form = createQuestionForm(parameters);
+        AddFastNumericTestForm form = createQuestionForm(parameters);
         UndefindedParameterException exception =
-                assertThrows(UndefindedParameterException.class, () -> new TestTaskGenerator(form, null, null));
+                assertThrows(UndefindedParameterException.class, () -> new NumericTestTaskGenerator(form, null, null));
         assertEquals("Параметр с именем undefined не задан", exception.getMessage());
     }
 
@@ -273,11 +273,11 @@ class TestTaskGeneratorTest {
     @DisplayName("Бросает исключение при попытке сгенерировать вопрос, не задав все терминальные параметры")
     void shouldThrowNotAllTerminalParametersDefinedException_WhenDependencyOnNonExistentParameter() {
         List<Parameter> parameters = List.of(createTerminalParam("a"));
-        TestTaskGenerator testTaskGenerator = new TestTaskGenerator(createQuestionForm(parameters), null, null);
+        NumericTestTaskGenerator numericTestTaskGenerator = new NumericTestTaskGenerator(createQuestionForm(parameters), null, null);
         Map<String, BigDecimal> parametersValues = Map.of();
         NotAllTerminalParametersDefinedException exception = assertThrows(
                 NotAllTerminalParametersDefinedException.class,
-                () -> testTaskGenerator.generateTestTask(parametersValues));
+                () -> numericTestTaskGenerator.generateTestTask(parametersValues));
         assertEquals("Для генерации вопроса заданы не все терминальные параметры", exception.getMessage());
     }
 
@@ -285,11 +285,11 @@ class TestTaskGeneratorTest {
     @DisplayName("Бросает исключение при попытке задать некорректное значение терминального параметра")
     void shouldThrowInvalidParameterValueException_WhenInvalidParameterEntered() {
         List<Parameter> parameters = List.of(createTerminalParam("a", 0, 2, 1));
-        TestTaskGenerator testTaskGenerator = new TestTaskGenerator(createQuestionForm(parameters), null, null);
+        NumericTestTaskGenerator numericTestTaskGenerator = new NumericTestTaskGenerator(createQuestionForm(parameters), null, null);
         Map<String, BigDecimal> parametersValues = Map.of("a", new BigDecimal("0.5"));
         InvalidParameterValueException exception = assertThrows(
                 InvalidParameterValueException.class,
-                () -> testTaskGenerator.generateTestTask(parametersValues));
+                () -> numericTestTaskGenerator.generateTestTask(parametersValues));
         assertEquals("Для параметра 'a' задано неверное значение", exception.getMessage());
     }
 }

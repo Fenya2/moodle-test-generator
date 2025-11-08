@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Результат генерации {@link ru.moodle.testgenerator.moodletestgenerator.core.TestTask},
- * выдаваемый {@link ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator#generateTestTask(Map)}
+ * Результат генерации {@link NumericTestTask},
+ * выдаваемый {@link NumericTestTaskGenerator#generateTestTask(Map)}
  *
  * @author dsyromyatnikov
  * @since 18.10.2025
@@ -15,7 +15,7 @@ public class TestTaskGenerationResult {
     /**
      * Тестовое задание
      */
-    private final TestTask testTask;
+    private final NumericTestTask numericTestTask;
     /**
      * Параметры, по которым было построено задание.
      *
@@ -23,13 +23,13 @@ public class TestTaskGenerationResult {
      */
     private final Map<String, BigDecimal> parameters;
 
-    public TestTaskGenerationResult(TestTask testTask, Map<String, BigDecimal> parameters) {
-        this.testTask = testTask;
+    public TestTaskGenerationResult(NumericTestTask numericTestTask, Map<String, BigDecimal> parameters) {
+        this.numericTestTask = numericTestTask;
         this.parameters = Collections.unmodifiableMap(parameters);
     }
 
-    public TestTask getTestTask() {
-        return testTask;
+    public NumericTestTask getTestTask() {
+        return numericTestTask;
     }
 
     public Map<String, BigDecimal> getParameters() {

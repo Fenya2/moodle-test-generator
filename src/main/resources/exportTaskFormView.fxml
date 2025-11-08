@@ -32,11 +32,21 @@
             <Insets top="10" right="20" bottom="10" left="20"/>
         </padding>
 
-        <Label text="Количество тестов*:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <!-- Строка 0: Название теста -->
+        <Label text="Название теста*:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="taskNameField"
+                   promptText="Название теста"
+                   text="Задание"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <!-- Строка 1: Количество тестов -->
+        <Label text="Количество тестов*:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <PositiveIntegerField fx:id="testCountField"
                               promptText="Например: 10"
-                              GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                              text="10"
+                              GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
+        <!-- Строка 2: Путь к папке -->
         <Label text="Путь к папке:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
         <HBox spacing="6" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="1">
             <TextField fx:id="directoryPathField"
@@ -45,13 +55,12 @@
             <Button text="..." onAction="#onClickChooseDirectory"/>
         </HBox>
 
+        <!-- Строка 3: Имя файла -->
         <Label text="Имя файла:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
         <TextField fx:id="fileNameField"
                    promptText="Без расширения"
                    GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
     </GridPane>
-
     <Region VBox.vgrow="ALWAYS"/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">

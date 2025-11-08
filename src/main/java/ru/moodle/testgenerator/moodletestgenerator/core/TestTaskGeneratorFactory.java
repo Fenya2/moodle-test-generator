@@ -1,13 +1,13 @@
 package ru.moodle.testgenerator.moodletestgenerator.core;
 
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
 
 /**
- * Фабрика {@link TestTaskGenerator}
+ * Фабрика {@link NumericTestTaskGenerator}
  *
  * @author dsyromyatnikov
  * @since 17.10.2025
  */
 public interface TestTaskGeneratorFactory {
-    TestTaskGenerator create(AddFastTestForm form);
+    NumericTestTaskGenerator create(AddFastNumericTestForm form);
 }

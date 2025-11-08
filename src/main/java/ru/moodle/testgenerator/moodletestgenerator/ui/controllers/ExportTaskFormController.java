@@ -2,22 +2,27 @@ package ru.moodle.testgenerator.moodletestgenerator.ui.controllers;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTask;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
-import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.export.ExportingService;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
 import ru.moodle.testgenerator.moodletestgenerator.ui.PositiveIntegerField;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTaskPreviewController.ADD_TASK_PREVIEW_FORM_VIEW;
 
@@ -27,17 +32,20 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  * @author dsyromyatnikov
  * @since 19.10.2025
  */
-public class ExportTaskFormController extends AbstractControllerWithContext<TestTaskGenerator> {
+public class ExportTaskFormController extends AbstractControllerWithContext<NumericTestTaskGenerator> implements Initializable {
 
     public static final String EXPORT_TASK_VIEW_FORM_VIEW = "/exportTaskFormView.fxml";
 
     private final ExportingService exportingService;
     private final ParameterRandomizer parameterRandomizer;
 
-    private TestTaskGenerator testTaskGenerator;
+    private NumericTestTaskGenerator numericTestTaskGenerator;
 
     @FXML
     private Label errorLabel;
+
+    @FXML
+    private TextField taskNameField;
 
     @FXML
     private PositiveIntegerField testCountField;
@@ -56,8 +64,25 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Test
     }
 
     @Override
-    public void setContext(TestTaskGenerator context) {
-        this.testTaskGenerator = context;
+    public void setContext(NumericTestTaskGenerator context) {
+        this.numericTestTaskGenerator = context;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        fileNameField.setText("Задание");
+        setDefaultDirectoryPath();
+    }
+
+    private void setDefaultDirectoryPath() {
+        Path userHome = Paths.get(System.getProperty("user.home"));
+        Path desktopPath = userHome.resolve("Desktop");
+
+        if (Files.exists(desktopPath) && Files.isDirectory(desktopPath)) {
+            directoryPathField.setText(desktopPath.toString());
+        } else {
+            directoryPathField.setText(userHome.toString());
+        }
     }
 
     /**
@@ -65,7 +90,7 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Test
      */
     @FXML
     private void onBackClick() {
-        navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGenerator);
+        navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, numericTestTaskGenerator);
     }
 
     /**
@@ -83,7 +108,6 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Test
     }
 
     private File calculateInitialDirectory() {
-
         String currentPath = directoryPathField.getText();
         if (!currentPath.isBlank()) {
             File initialDir = new File(currentPath);
@@ -104,11 +128,16 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Test
             int testCount = Integer.parseInt(testCountField.getText());
             Path filePath = Path.of(directoryPathField.getText(), fileNameField.getText());
 
-            List<TerminalParameter> terminalParameters = testTaskGenerator.getTerminalParameters();
-            List<TestTask> tasks = parameterRandomizer.randomizeTerminalParameters(terminalParameters, testCount).stream()
-                    .map(testTaskGenerator::generateTestTask)
+            List<TerminalParameter> terminalParameters = numericTestTaskGenerator.getTerminalParameters();
+            List<NumericTestTask> tasks = parameterRandomizer.randomizeTerminalParameters(terminalParameters, testCount).stream()
+                    .map(numericTestTaskGenerator::generateTestTask)
                     .map(TestTaskGenerationResult::getTestTask)
                     .toList();
+
+            String taskName = taskNameField.getText();
+            for (int i = 0; i < tasks.size(); i++) {
+                tasks.get(i).setName(taskName + " " + i);
+            }
 
             exportingService.exportToGift(tasks, filePath);
             showLoadedDialog();

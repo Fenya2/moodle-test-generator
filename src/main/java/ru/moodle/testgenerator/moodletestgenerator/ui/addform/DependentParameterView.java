@@ -33,10 +33,10 @@ public final class DependentParameterView extends AbstractParameterView {
         VBox scriptSection = new VBox(5);
         Label scriptLabel = new Label("Скрипт для вычисления параметра:");
         scriptArea = new TextArea();
-        scriptArea.setPromptText("a + 2 * b");
+        scriptArea.setText("return ");
+        scriptArea.setPromptText("return a + 2 * b");
         scriptArea.setPrefRowCount(1);
         scriptSection.getChildren().addAll(scriptLabel, scriptArea);
-
         this.getChildren().addAll(dependenciesSection, scriptSection);
     }
 

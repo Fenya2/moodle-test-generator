@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import ru.moodle.testgenerator.moodletestgenerator.ui.DecimalField;
+import ru.moodle.testgenerator.moodletestgenerator.ui.PositiveDecimalField;
 
 /**
  * Параметр, значение которого не зависит от других параметров
@@ -33,7 +34,7 @@ public final class TerminalParameterView extends AbstractParameterView {
         // Третья строка: шаг
         HBox stepRow = new HBox(5);
         Label stepLabel = new Label("Шаг:");
-        stepField = new DecimalField();
+        stepField = new PositiveDecimalField();
         stepField.setPromptText("0.1");
         stepRow.getChildren().addAll(stepLabel, stepField);
 

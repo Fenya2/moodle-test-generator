@@ -9,7 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGeneratorFactory;
-import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastTestForm;
+import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parameter;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
@@ -30,12 +30,12 @@ import static ru.moodle.testgenerator.moodletestgenerator.core.parameters.Parame
 import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTaskPreviewController.ADD_TASK_PREVIEW_FORM_VIEW;
 
 /**
- * Контроллер формы добавления задания. Может быть запущен в контексте заполненной ранее формы
+ * Контроллер формы добавления задания с численным вариантом ответа. Может быть запущен в контексте заполненной ранее формы
  *
  * @author dsyromyatnikov
  * @since 12.10.2025
  */
-public class AddTestTaskFormController extends AbstractControllerWithContext<AddFastTestForm> implements Initializable {
+public class AddTestTaskFormController extends AbstractControllerWithContext<AddFastNumericTestForm> implements Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
@@ -47,25 +47,40 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
      * Форма, которую ранее заполнял пользователь
      */
     @Nullable
-    private AddFastTestForm addForm;
+    private AddFastNumericTestForm addForm;
+
+    /**
+     * Поле ввода вопроса
+     */
     @FXML
     private TextArea questionField;
 
+    /**
+     * Контейнер с параметрами
+     */
     @FXML
     private VBox parametersContainer;
 
+    /**
+     * Поле ответа
+     */
     @FXML
     private TextField answerField;
+
+    /**
+     * Поле погрешности ответа
+     */
+    @FXML
+    private TextField answerErrorField;
 
     @Inject
     public AddTestTaskFormController(NavigationService navigationService, TestTaskGeneratorFactory testTaskGeneratorFactory) {
         super(navigationService);
-        this.navigationService = navigationService;
         this.testTaskGeneratorFactory = testTaskGeneratorFactory;
     }
 
     @Override
-    public void setContext(AddFastTestForm context) {
+    public void setContext(AddFastNumericTestForm context) {
         this.addForm = context;
     }
 
@@ -78,8 +93,8 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
             return;
         }
 
-        questionField.setText(addForm.getQuestion());
-        for (Parameter parameter : addForm.getParameters()) {
+        questionField.setText(addForm.question());
+        for (Parameter parameter : addForm.parameters()) {
             ParameterContainerView parameterContainer = new ParameterContainerView();
             parameterContainer.addEventHandler(ParameterRemovedEvent.REMOVE_PARAMETER, this::onRemoveParameterClick);
 
@@ -108,12 +123,12 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
             }
             parametersContainer.getChildren().add(parameterContainer);
         }
-
         if (!parametersContainer.getChildren().isEmpty()) {
             parametersContainer.setVisible(true);
         }
 
-        answerField.setText(addForm.getAnswer());
+        answerField.setText(addForm.answer());
+        answerErrorField.setText(addForm.answerError());
     }
 
     /**
@@ -158,7 +173,7 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
     /**
      * Собирает данные с формы и формирует объект формы
      */
-    private AddFastTestForm collectDataOnForm() {
+    private AddFastNumericTestForm collectDataOnForm() {
         String question = questionField.getText();
         List<Parameter> parameters = getParameterViews().stream().map(ParameterContainerView.class::cast)
                 .map(ParameterContainerView::getFilledParameter)
@@ -168,7 +183,8 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
                     case DependentParameterView dependentParamView -> createDependentParameter(dependentParamView);
                 }).toList();
         String answer = answerField.getText();
-        return new AddFastTestForm(question, parameters, answer);
+        String answerError = answerErrorField.getText();
+        return new AddFastNumericTestForm(question, parameters, answer, answerError);
     }
 
     private static TerminalParameter createTerminalParameter(TerminalParameterView terminalParamView) {

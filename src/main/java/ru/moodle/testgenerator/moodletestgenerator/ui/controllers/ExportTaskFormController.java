@@ -8,9 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
+import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
-import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.export.ExportingService;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParameter;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationService;
@@ -123,7 +123,6 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Nume
      */
     @FXML
     public void onExportClick() {
-
         try {
             int testCount = Integer.parseInt(testCountField.getText());
             Path filePath = Path.of(directoryPathField.getText(), fileNameField.getText());
@@ -136,7 +135,7 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Nume
 
             String taskName = taskNameField.getText();
             for (int i = 0; i < tasks.size(); i++) {
-                tasks.get(i).setName(taskName + " " + i);
+                tasks.get(i).setName(taskName + " " + (i + 1));
             }
 
             exportingService.exportToGift(tasks, filePath);

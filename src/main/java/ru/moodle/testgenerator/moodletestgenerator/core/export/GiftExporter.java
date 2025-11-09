@@ -19,8 +19,8 @@ public class GiftExporter implements ExportingService {
     private static final Set<String> GIFT_SPECIAL_CHARACTERS = Set.of("~", "=", "#", "{", "}");
     private static final String GIFT_FILE_EXTENSION = "txt";
 
-    private static final String GIFT_NUMERIC_ANSWER_PATTERN = "{=%s:%s}";
-    private static final String GIFT_TITLE_PATTERN = "::%s::";
+    private static final String GIFT_NUMERIC_ANSWER_PATTERN = "{#%s:%s}";
+    private static final String GIFT_TITLE_PATTERN = "::%s\n::";
 
     @Override
     public void exportToGift(List<NumericTestTask> tasks, Path path) {

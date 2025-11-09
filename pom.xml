@@ -7,9 +7,10 @@
     <groupId>ru.moodle.testgenerator</groupId>
     <artifactId>MoodleTestGenerator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>MoodleTestGenerator</name>
+    <name>${project.name}</name>
 
     <properties>
+        <project.name>MoodleTestGenerator</project.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
         <javafx.version>25</javafx.version>
@@ -17,6 +18,8 @@
         <jython-standalone.version>2.7.3</jython-standalone.version>
         <guice.version>7.0.0</guice.version>
         <commons-text.version>1.14.0</commons-text.version>
+        <guava.version>33.5.0-jre</guava.version>
+        <jpackage-maven-plugin.version>1.7.1</jpackage-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -98,6 +101,41 @@
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>${jpackage-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-deb</id>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.build.directory}</input>
+                            <name>${project.name}</name>
+                            <type>DEB</type>
+                            <mainJar>${project.artifactId}-${project.version}.jar</mainJar>
+                            <mainClass>ru.moodle.testgenerator.moodletestgenerator.Main</mainClass>
+                            <destination>${project.build.directory}/installer</destination>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-exe</id>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.build.directory}</input>
+                            <name>${project.name}</name>
+                            <type>EXE</type>
+                            <mainJar>${project.artifactId}-${project.version}.jar</mainJar>
+                            <mainClass>ru.moodle.testgenerator.moodletestgenerator.Main</mainClass>
+                            <destination>${project.build.directory}/installer</destination>
                         </configuration>
                     </execution>
                 </executions>

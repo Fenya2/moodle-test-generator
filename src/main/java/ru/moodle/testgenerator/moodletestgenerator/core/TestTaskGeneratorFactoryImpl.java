@@ -24,7 +24,7 @@ public class TestTaskGeneratorFactoryImpl implements TestTaskGeneratorFactory {
     }
 
     @Override
-    public NumericTestTaskGenerator create(AddFastNumericTestForm form) {
-        return new NumericTestTaskGenerator(form, scriptCalculator, templateEngine);
+    public TestTaskGenerator create(AddFastNumericTestForm form) {
+        return new TestTaskGenerator(form, scriptCalculator, templateEngine);
     }
 }

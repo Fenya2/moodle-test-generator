@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
-import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
@@ -31,12 +31,12 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.ExportT
 
 /**
  * Контроллер формы предпросмотра составленного вопроса. Подразумевается, что пользователь уже описал вопрос и по
- * вопросу сгенерировался генератор {@link NumericTestTaskGenerator}. То есть контроллер начинает работу с контекстом
+ * вопросу сгенерировался генератор {@link TestTaskGenerator}. То есть контроллер начинает работу с контекстом
  *
  * @author dsyromyatnikov
  * @since 11.10.2025
  */
-public class TestTaskPreviewController extends AbstractControllerWithContext<NumericTestTaskGenerator> implements Initializable {
+public class TestTaskPreviewController extends AbstractControllerWithContext<TestTaskGenerator> implements Initializable {
     /**
      * Представление, которое обрабатывает контроллер
      */
@@ -58,7 +58,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Num
      */
     @FXML
     public TextArea answerTextArea;
-    private NumericTestTaskGenerator numericTestTaskGenerator;
+    private TestTaskGenerator testTaskGenerator;
 
     @Inject
     public TestTaskPreviewController(NavigationService navigationService, ParameterRandomizer parameterRandomizer) {
@@ -67,8 +67,8 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Num
     }
 
     @Override
-    public void setContext(NumericTestTaskGenerator context) {
-        this.numericTestTaskGenerator = context;
+    public void setContext(TestTaskGenerator context) {
+        this.testTaskGenerator = context;
     }
 
     /**
@@ -118,7 +118,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Num
         Map<String, BigDecimal> terminalParamsValues = collectTerminalParamsValuesOnForm();
         TestTaskGenerationResult result;
         try {
-            result = numericTestTaskGenerator.generateTestTask(terminalParamsValues);
+            result = testTaskGenerator.generateTestTask(terminalParamsValues);
         } catch (Exception e) {
             printError(e.getMessage());
             return;
@@ -180,7 +180,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Num
      */
     @FXML
     private void onContinueClick() {
-        navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, numericTestTaskGenerator);
+        navigateTo(EXPORT_TASK_VIEW_FORM_VIEW, testTaskGenerator);
     }
 
     /**
@@ -188,10 +188,10 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Num
      */
     @FXML
     private void onBackClick() {
-        navigateTo(ADD_TASK_FORM_VIEW, numericTestTaskGenerator.getForm());
+        navigateTo(ADD_TASK_FORM_VIEW, testTaskGenerator.getForm());
     }
 
     private AddFastNumericTestForm getQuestionForm() {
-        return numericTestTaskGenerator.getForm();
+        return testTaskGenerator.getForm();
     }
 }

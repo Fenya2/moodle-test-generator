@@ -20,7 +20,11 @@ import java.util.stream.Stream;
  * @author dsyromyatnikov
  * @since 05.10.2025
  */
-public class NumericTestTaskGenerator {
+public class TestTaskGenerator {
+    /**
+     * Нулевая погрешность ответа
+     */
+    public static final String ZERO_ANSWER_ERROR = "0";
     /**
      * Формат погрешности, которой должна соответствовать строка, описывающая погрешность ответа
      *
@@ -47,7 +51,7 @@ public class NumericTestTaskGenerator {
      */
     private final String answerError;
 
-    public NumericTestTaskGenerator(AddFastNumericTestForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
+    public TestTaskGenerator(AddFastNumericTestForm form, ScriptCalculator scriptCalculator, TemplateEngine templateEngine) {
         this.form = form;
         this.scriptCalculator = scriptCalculator;
         this.templateEngine = templateEngine;

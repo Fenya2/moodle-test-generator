@@ -105,41 +105,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.panteleyev</groupId>
-                <artifactId>jpackage-maven-plugin</artifactId>
-                <version>${jpackage-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>build-deb</id>
-                        <goals>
-                            <goal>jpackage</goal>
-                        </goals>
-                        <configuration>
-                            <input>${project.build.directory}</input>
-                            <name>${project.name}</name>
-                            <type>DEB</type>
-                            <mainJar>${project.artifactId}-${project.version}.jar</mainJar>
-                            <mainClass>ru.moodle.testgenerator.moodletestgenerator.Main</mainClass>
-                            <destination>${project.build.directory}/installer</destination>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>build-exe</id>
-                        <goals>
-                            <goal>jpackage</goal>
-                        </goals>
-                        <configuration>
-                            <input>${project.build.directory}</input>
-                            <name>${project.name}</name>
-                            <type>EXE</type>
-                            <mainJar>${project.artifactId}-${project.version}.jar</mainJar>
-                            <mainClass>ru.moodle.testgenerator.moodletestgenerator.Main</mainClass>
-                            <destination>${project.build.directory}/installer</destination>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>

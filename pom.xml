@@ -7,9 +7,10 @@
     <groupId>ru.moodle.testgenerator</groupId>
     <artifactId>MoodleTestGenerator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>MoodleTestGenerator</name>
+    <name>${project.name}</name>
 
     <properties>
+        <project.name>MoodleTestGenerator</project.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
         <javafx.version>25</javafx.version>
@@ -17,6 +18,8 @@
         <jython-standalone.version>2.7.3</jython-standalone.version>
         <guice.version>7.0.0</guice.version>
         <commons-text.version>1.14.0</commons-text.version>
+        <guava.version>33.5.0-jre</guava.version>
+        <jpackage-maven-plugin.version>1.7.1</jpackage-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -104,4 +107,44 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Собирает исполняемый fat-jar с зависимостями, заменяющий основной jar -->
+        <profile>
+            <id>build-release-artifact</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <attach>true</attach>
+                            <archive>
+                                <manifest>
+                                    <mainClass>ru.moodle.testgenerator.moodletestgenerator.Main</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

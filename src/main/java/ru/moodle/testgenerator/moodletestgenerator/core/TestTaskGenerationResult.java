@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * Результат генерации {@link NumericTestTask},
- * выдаваемый {@link NumericTestTaskGenerator#generateTestTask(Map)}
+ * выдаваемый {@link TestTaskGenerator#generateTestTask(Map)}
  *
  * @author dsyromyatnikov
  * @since 18.10.2025

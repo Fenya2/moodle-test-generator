@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTask;
-import ru.moodle.testgenerator.moodletestgenerator.core.NumericTestTaskGenerator;
+import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerator;
 import ru.moodle.testgenerator.moodletestgenerator.core.ParameterRandomizer;
 import ru.moodle.testgenerator.moodletestgenerator.core.TestTaskGenerationResult;
 import ru.moodle.testgenerator.moodletestgenerator.core.export.ExportingService;
@@ -32,14 +32,14 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  * @author dsyromyatnikov
  * @since 19.10.2025
  */
-public class ExportTaskFormController extends AbstractControllerWithContext<NumericTestTaskGenerator> implements Initializable {
+public class ExportTaskFormController extends AbstractControllerWithContext<TestTaskGenerator> implements Initializable {
 
     public static final String EXPORT_TASK_VIEW_FORM_VIEW = "/exportTaskFormView.fxml";
 
     private final ExportingService exportingService;
     private final ParameterRandomizer parameterRandomizer;
 
-    private NumericTestTaskGenerator numericTestTaskGenerator;
+    private TestTaskGenerator testTaskGenerator;
 
     @FXML
     private Label errorLabel;
@@ -64,8 +64,8 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Nume
     }
 
     @Override
-    public void setContext(NumericTestTaskGenerator context) {
-        this.numericTestTaskGenerator = context;
+    public void setContext(TestTaskGenerator context) {
+        this.testTaskGenerator = context;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Nume
      */
     @FXML
     private void onBackClick() {
-        navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, numericTestTaskGenerator);
+        navigateTo(ADD_TASK_PREVIEW_FORM_VIEW, testTaskGenerator);
     }
 
     /**
@@ -127,9 +127,9 @@ public class ExportTaskFormController extends AbstractControllerWithContext<Nume
             int testCount = Integer.parseInt(testCountField.getText());
             Path filePath = Path.of(directoryPathField.getText(), fileNameField.getText());
 
-            List<TerminalParameter> terminalParameters = numericTestTaskGenerator.getTerminalParameters();
+            List<TerminalParameter> terminalParameters = testTaskGenerator.getTerminalParameters();
             List<NumericTestTask> tasks = parameterRandomizer.randomizeTerminalParameters(terminalParameters, testCount).stream()
-                    .map(numericTestTaskGenerator::generateTestTask)
+                    .map(testTaskGenerator::generateTestTask)
                     .map(TestTaskGenerationResult::getTestTask)
                     .toList();
 

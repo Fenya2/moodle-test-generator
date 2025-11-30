@@ -3,6 +3,7 @@ package ru.moodle.testgenerator.moodletestgenerator;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.moodle.testgenerator.moodletestgenerator.core.form.AddFastNumericTestForm;
 import ru.moodle.testgenerator.moodletestgenerator.core.parameters.DependentParameter;
@@ -10,6 +11,7 @@ import ru.moodle.testgenerator.moodletestgenerator.core.parameters.TerminalParam
 import ru.moodle.testgenerator.moodletestgenerator.guice.AppModule;
 import ru.moodle.testgenerator.moodletestgenerator.ui.NavigationServiceImpl;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -17,16 +19,28 @@ import java.util.Set;
 import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.AddTestTaskFormController.ADD_TASK_FORM_VIEW;
 
 public class Main extends Application {
+    private static final String ICON_PATH = "/icon.png";
     private static final String WINDOW_TITLE = "Moodle test generator";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        loadIcon(primaryStage);
         Injector injector = Guice.createInjector(new AppModule(primaryStage));
         NavigationServiceImpl navigationServiceImpl = injector.getInstance(NavigationServiceImpl.class);
         AddFastNumericTestForm startForm = createStartTestForm();
         navigationServiceImpl.navigateTo(ADD_TASK_FORM_VIEW, startForm);
         primaryStage.setTitle(WINDOW_TITLE);
         primaryStage.show();
+    }
+
+    private static void loadIcon(Stage primaryStage) {
+        InputStream resourceAsStream = Main.class.getResourceAsStream(ICON_PATH);
+        if (resourceAsStream == null) {
+            System.out.println("Не удалось открыть иконку");
+            return;
+        }
+        Image icon = new Image(resourceAsStream);
+        primaryStage.getIcons().add(icon);
     }
 
     private static AddFastNumericTestForm createStartTestForm() {

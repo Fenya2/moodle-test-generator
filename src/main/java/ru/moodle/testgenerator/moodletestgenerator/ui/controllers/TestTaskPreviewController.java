@@ -40,7 +40,7 @@ public class TestTaskPreviewController extends AbstractControllerWithContext<Tes
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String ADD_TASK_PREVIEW_FORM_VIEW = "/addTaskPreviewFormView.fxml";
+    public static final String ADD_TASK_PREVIEW_FORM_VIEW = "/fxml/addTaskPreviewFormView.fxml";
 
     private final ParameterRandomizer parameterRandomizer;
 

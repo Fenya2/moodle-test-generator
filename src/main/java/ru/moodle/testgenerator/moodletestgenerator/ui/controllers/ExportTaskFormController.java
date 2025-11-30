@@ -34,7 +34,7 @@ import static ru.moodle.testgenerator.moodletestgenerator.ui.controllers.TestTas
  */
 public class ExportTaskFormController extends AbstractControllerWithContext<TestTaskGenerator> implements Initializable {
 
-    public static final String EXPORT_TASK_VIEW_FORM_VIEW = "/exportTaskFormView.fxml";
+    public static final String EXPORT_TASK_VIEW_FORM_VIEW = "/fxml/exportTaskFormView.fxml";
 
     private final ExportingService exportingService;
     private final ParameterRandomizer parameterRandomizer;

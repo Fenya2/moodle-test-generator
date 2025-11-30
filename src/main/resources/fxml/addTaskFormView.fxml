@@ -2,7 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import ru.moodle.testgenerator.moodletestgenerator.ui.PositiveDecimalField?>
 <?import java.net.URL?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml"
@@ -11,7 +12,7 @@
 
     <!-- Подключаем CSS -->
     <stylesheets>
-        <URL value="@styles.css"/>
+        <URL value="@../styles.css"/>
     </stylesheets>
 
     <VBox spacing="15">
@@ -19,14 +20,7 @@
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
 
-        <HBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Добавление вопроса" styleClass="header-label"/>
-            <Label text="?" styleClass="tooltip-label">
-                <tooltip>
-                    <Tooltip text="#todo добавить описание возможностей ввода вопроса"/>
-                </tooltip>
-            </Label>
-        </HBox>
+        <Label text="Добавление вопроса" styleClass="header-label"/>
 
         <TextArea fx:id="questionField"
                   promptText="Введите текст вопроса"
@@ -34,15 +28,7 @@
                   minHeight="140"
                   VBox.vgrow="ALWAYS"/>
 
-        <HBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Параметры" styleClass="header-label"/>
-            <Label text="?" styleClass="tooltip-label">
-                <tooltip>
-                    <Tooltip text="Нажмите +, чтобы добавить новый параметр к вопросу"/>
-                </tooltip>
-            </Label>
-        </HBox>
-
+        <Label text="Параметры" styleClass="header-label"/>
         <VBox fx:id="parametersContainer" visible="false" spacing="10"
               style="-fx-border-color: lightgray; -fx-padding: 10;">
         </VBox>
@@ -63,5 +49,13 @@
         <HBox alignment="TOP_RIGHT">
             <Button text="Готово" maxWidth="100" onAction="#onSubmitButton"/>
         </HBox>
+        <TextField text="Docs: https://github.com/Fenya2/moodle-test-generator/"
+                   style="-fx-font-size: 10px;
+                  -fx-text-fill: gray;
+                  -fx-background-color: transparent;
+                  -fx-border-color: transparent;
+                  -fx-padding: 2 0 2 0;"
+                   editable="false"
+                   focusTraversable="false"/>
     </VBox>
 </ScrollPane>

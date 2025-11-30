@@ -39,7 +39,7 @@ public class AddTestTaskFormController extends AbstractControllerWithContext<Add
     /**
      * Представление, которое обрабатывает контроллер
      */
-    public static final String ADD_TASK_FORM_VIEW = "/addTaskFormView.fxml";
+    public static final String ADD_TASK_FORM_VIEW = "/fxml/addTaskFormView.fxml";
 
     private final TestTaskGeneratorFactory testTaskGeneratorFactory;
 
